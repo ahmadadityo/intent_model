@@ -205,13 +205,13 @@ File `dataset.json` berformat array JSON dengan struktur:
 [
   {
     "nomor": 1,
-    "texts": "kapasitas Panggung berapa",
-    "label": "info_peralatan"
+    "texts": "dimana lokasi Kawah Putih Bandung",
+    "label": "info_lokasi_wisata"
   },
   {
     "nomor": 2,
-    "texts": "lokasi Rumah Transit dimana",
-    "label": "info_rumah_transit"
+    "texts": "berapa harga tiket masuk Tangkuban Perahu",
+    "label": "info_tiket_wisata"
   }
 ]
 ```
