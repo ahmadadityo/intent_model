@@ -1,0 +1,502 @@
+[
+  {
+    "nomor": 1,
+    "texts": "dimana lokasi Kawah Putih Bandung",
+    "label": "info_lokasi_wisata"
+  },
+  {
+    "nomor": 2,
+    "texts": "berapa harga tiket masuk Tangkuban Perahu",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 3,
+    "texts": "jam buka Kebun Binatang Bandung",
+    "label": "info_jam_operasional"
+  },
+  {
+    "nomor": 4,
+    "texts": "apa saja tempat wisata populer di Bandung",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 5,
+    "texts": "bagaimana cara menuju Dusun Bambu dari pusat kota Bandung",
+    "label": "info_transportasi_wisata"
+  },
+  {
+    "nomor": 6,
+    "texts": "apakah Farmhouse Lembang buka setiap hari",
+    "label": "info_jam_operasional"
+  },
+  {
+    "nomor": 7,
+    "texts": "tiket masuk Floating Market Lembang berapa",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 8,
+    "texts": "lokasi Stone Garden Citatah dimana",
+    "label": "info_lokasi_wisata"
+  },
+  {
+    "nomor": 9,
+    "texts": "rekomendasi wisata alam di sekitar Bandung",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 10,
+    "texts": "ada wahana apa saja di Trans Studio Bandung",
+    "label": "info_fasilitas_wisata"
+  },
+  {
+    "nomor": 11,
+    "texts": "harga tiket Trans Studio Bandung untuk anak-anak",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 12,
+    "texts": "jam operasional Tangkuban Perahu",
+    "label": "info_jam_operasional"
+  },
+  {
+    "nomor": 13,
+    "texts": "bagaimana rute menuju Kawah Putih dari Bandung",
+    "label": "info_transportasi_wisata"
+  },
+  {
+    "nomor": 14,
+    "texts": "apakah ada shuttle bus ke Kawah Putih",
+    "label": "info_transportasi_wisata"
+  },
+  {
+    "nomor": 15,
+    "texts": "fasilitas apa yang tersedia di Floating Market Lembang",
+    "label": "info_fasilitas_wisata"
+  },
+  {
+    "nomor": 16,
+    "texts": "berapa harga tiket Farmhouse Lembang",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 17,
+    "texts": "wisata kuliner malam di Bandung ada dimana",
+    "label": "info_kuliner_wisata"
+  },
+  {
+    "nomor": 18,
+    "texts": "makanan khas Bandung apa saja",
+    "label": "info_kuliner_wisata"
+  },
+  {
+    "nomor": 19,
+    "texts": "tempat makan enak di kawasan Dago Bandung",
+    "label": "info_kuliner_wisata"
+  },
+  {
+    "nomor": 20,
+    "texts": "lokasi Braga Street Bandung dimana",
+    "label": "info_lokasi_wisata"
+  },
+  {
+    "nomor": 21,
+    "texts": "apa yang menarik di kawasan Braga Bandung",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 22,
+    "texts": "jam buka Museum Geologi Bandung",
+    "label": "info_jam_operasional"
+  },
+  {
+    "nomor": 23,
+    "texts": "harga tiket masuk Museum Geologi Bandung",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 24,
+    "texts": "koleksi apa saja yang ada di Museum Geologi Bandung",
+    "label": "info_fasilitas_wisata"
+  },
+  {
+    "nomor": 25,
+    "texts": "dimana letak Gedung Sate Bandung",
+    "label": "info_lokasi_wisata"
+  },
+  {
+    "nomor": 26,
+    "texts": "apakah Gedung Sate bisa dikunjungi wisatawan",
+    "label": "info_fasilitas_wisata"
+  },
+  {
+    "nomor": 27,
+    "texts": "cara ke Lembang dari Bandung kota naik apa",
+    "label": "info_transportasi_wisata"
+  },
+  {
+    "nomor": 28,
+    "texts": "wisata edukasi anak di Bandung apa saja",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 29,
+    "texts": "apakah Dusun Bambu cocok untuk keluarga",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 30,
+    "texts": "harga tiket Dusun Bambu Family Leisure Park",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 31,
+    "texts": "jam buka Dusun Bambu Lembang",
+    "label": "info_jam_operasional"
+  },
+  {
+    "nomor": 32,
+    "texts": "lokasi Tebing Keraton Bandung ada dimana",
+    "label": "info_lokasi_wisata"
+  },
+  {
+    "nomor": 33,
+    "texts": "berapa tiket masuk Tebing Keraton",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 34,
+    "texts": "jam buka Tebing Keraton Dago",
+    "label": "info_jam_operasional"
+  },
+  {
+    "nomor": 35,
+    "texts": "rekomendasi penginapan dekat Tangkuban Perahu",
+    "label": "info_akomodasi_wisata"
+  },
+  {
+    "nomor": 36,
+    "texts": "hotel murah di Bandung dekat tempat wisata",
+    "label": "info_akomodasi_wisata"
+  },
+  {
+    "nomor": 37,
+    "texts": "villa dengan pemandangan bagus di Bandung",
+    "label": "info_akomodasi_wisata"
+  },
+  {
+    "nomor": 38,
+    "texts": "wisata belanja di Bandung dimana saja",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 39,
+    "texts": "factory outlet terkenal di Bandung ada dimana",
+    "label": "info_lokasi_wisata"
+  },
+  {
+    "nomor": 40,
+    "texts": "apa saja oleh-oleh khas Bandung",
+    "label": "info_kuliner_wisata"
+  },
+  {
+    "nomor": 41,
+    "texts": "dimana beli batagor enak di Bandung",
+    "label": "info_kuliner_wisata"
+  },
+  {
+    "nomor": 42,
+    "texts": "tempat nongkrong hits di Bandung 2024",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 43,
+    "texts": "cafe dengan pemandangan Bandung yang instagramable",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 44,
+    "texts": "wisata Bandung yang buka 24 jam",
+    "label": "info_jam_operasional"
+  },
+  {
+    "nomor": 45,
+    "texts": "tempat wisata Bandung gratis tanpa tiket",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 46,
+    "texts": "berapa jauh Kawah Putih dari Bandung",
+    "label": "info_transportasi_wisata"
+  },
+  {
+    "nomor": 47,
+    "texts": "transportasi umum menuju Floating Market Lembang",
+    "label": "info_transportasi_wisata"
+  },
+  {
+    "nomor": 48,
+    "texts": "apakah bisa naik angkot ke Farmhouse Lembang",
+    "label": "info_transportasi_wisata"
+  },
+  {
+    "nomor": 49,
+    "texts": "wisata seru di Bandung untuk anak muda",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 50,
+    "texts": "tempat foto keren di Bandung selain Tebing Keraton",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 51,
+    "texts": "berapa harga tiket masuk kebun binatang Bandung",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 52,
+    "texts": "jam buka Kebun Binatang Bandung hari Minggu",
+    "label": "info_jam_operasional"
+  },
+  {
+    "nomor": 53,
+    "texts": "ada hewan apa saja di Kebun Binatang Bandung",
+    "label": "info_fasilitas_wisata"
+  },
+  {
+    "nomor": 54,
+    "texts": "lokasi Taman Hutan Raya Ir. H. Djuanda dimana",
+    "label": "info_lokasi_wisata"
+  },
+  {
+    "nomor": 55,
+    "texts": "berapa tiket masuk Tahura Djuanda Bandung",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 56,
+    "texts": "apa yang bisa dilakukan di Tahura Djuanda",
+    "label": "info_fasilitas_wisata"
+  },
+  {
+    "nomor": 57,
+    "texts": "jalur hiking di sekitar Bandung yang mudah",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 58,
+    "texts": "gunung apa saja yang ada di dekat Bandung",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 59,
+    "texts": "cara mendaki Gunung Manglayang dari Bandung",
+    "label": "info_transportasi_wisata"
+  },
+  {
+    "nomor": 60,
+    "texts": "wisata Bandung yang cocok saat musim hujan",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 61,
+    "texts": "museum apa saja yang ada di Bandung",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 62,
+    "texts": "lokasi Museum Sri Baduga Bandung",
+    "label": "info_lokasi_wisata"
+  },
+  {
+    "nomor": 63,
+    "texts": "jam buka Museum Sri Baduga",
+    "label": "info_jam_operasional"
+  },
+  {
+    "nomor": 64,
+    "texts": "tiket masuk Museum Sri Baduga berapa",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 65,
+    "texts": "apa koleksi unggulan Museum Sri Baduga",
+    "label": "info_fasilitas_wisata"
+  },
+  {
+    "nomor": 66,
+    "texts": "dimana lokasi Alun-Alun Bandung",
+    "label": "info_lokasi_wisata"
+  },
+  {
+    "nomor": 67,
+    "texts": "apakah Alun-Alun Bandung cocok untuk berwisata",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 68,
+    "texts": "fasilitas apa yang ada di Alun-Alun Bandung",
+    "label": "info_fasilitas_wisata"
+  },
+  {
+    "nomor": 69,
+    "texts": "tempat wisata keluarga terbaik di Bandung",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 70,
+    "texts": "wisata alam Bandung yang paling hits saat ini",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 71,
+    "texts": "berapa harga tiket masuk Orchid Forest Cikole",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 72,
+    "texts": "jam buka Orchid Forest Cikole Lembang",
+    "label": "info_jam_operasional"
+  },
+  {
+    "nomor": 73,
+    "texts": "lokasi Orchid Forest Cikole ada dimana",
+    "label": "info_lokasi_wisata"
+  },
+  {
+    "nomor": 74,
+    "texts": "apa daya tarik utama Orchid Forest Cikole",
+    "label": "info_fasilitas_wisata"
+  },
+  {
+    "nomor": 75,
+    "texts": "berapa jauh Lembang dari pusat kota Bandung",
+    "label": "info_transportasi_wisata"
+  },
+  {
+    "nomor": 76,
+    "texts": "naik apa dari Bandung ke Lembang yang murah",
+    "label": "info_transportasi_wisata"
+  },
+  {
+    "nomor": 77,
+    "texts": "penginapan murah di Lembang Bandung",
+    "label": "info_akomodasi_wisata"
+  },
+  {
+    "nomor": 78,
+    "texts": "wisata malam hari di Bandung yang seru",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 79,
+    "texts": "ada konser atau event seni di Bandung bulan ini",
+    "label": "info_event_wisata"
+  },
+  {
+    "nomor": 80,
+    "texts": "festival budaya di Bandung kapan diadakan",
+    "label": "info_event_wisata"
+  },
+  {
+    "nomor": 81,
+    "texts": "wisata sejarah di Bandung apa saja",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 82,
+    "texts": "lokasi Monumen Perjuangan Rakyat Jawa Barat dimana",
+    "label": "info_lokasi_wisata"
+  },
+  {
+    "nomor": 83,
+    "texts": "apakah Monumen Perjuangan Bandung bisa dikunjungi gratis",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 84,
+    "texts": "wisata religi di Bandung yang terkenal",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 85,
+    "texts": "masjid bersejarah di kota Bandung",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 86,
+    "texts": "lokasi Masjid Raya Bandung di mana",
+    "label": "info_lokasi_wisata"
+  },
+  {
+    "nomor": 87,
+    "texts": "jam buka Masjid Raya Bandung untuk wisatawan",
+    "label": "info_jam_operasional"
+  },
+  {
+    "nomor": 88,
+    "texts": "tempat camping dekat Bandung yang bagus",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 89,
+    "texts": "camping di Gunung Burangrang berapa biayanya",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 90,
+    "texts": "cara ke camping ground Ranca Upas dari Bandung",
+    "label": "info_transportasi_wisata"
+  },
+  {
+    "nomor": 91,
+    "texts": "harga tiket Ranca Upas Ciwidey Bandung",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 92,
+    "texts": "jam buka Kawah Putih Ciwidey Bandung",
+    "label": "info_jam_operasional"
+  },
+  {
+    "nomor": 93,
+    "texts": "apakah ada guide lokal di Kawah Putih",
+    "label": "info_fasilitas_wisata"
+  },
+  {
+    "nomor": 94,
+    "texts": "tempat wisata di Ciwidey selain Kawah Putih",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 95,
+    "texts": "berapa tiket masuk Situ Patenggang Bandung",
+    "label": "info_tiket_wisata"
+  },
+  {
+    "nomor": 96,
+    "texts": "lokasi Situ Patenggang Bandung ada dimana",
+    "label": "info_lokasi_wisata"
+  },
+  {
+    "nomor": 97,
+    "texts": "bisa sewa perahu di Situ Patenggang tidak",
+    "label": "info_fasilitas_wisata"
+  },
+  {
+    "nomor": 98,
+    "texts": "wisata terbaik di Bandung untuk honeymoon",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 99,
+    "texts": "paket wisata Bandung berapa hari yang ideal",
+    "label": "info_rekomendasi_wisata"
+  },
+  {
+    "nomor": 100,
+    "texts": "tips wisata hemat di Bandung untuk backpacker",
+    "label": "info_rekomendasi_wisata"
+  }
+]

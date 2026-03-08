@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intent Dataset Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --card: #16161f;
+      --border: #2a2a3a;
+      --accent: #6c63ff;
+      --accent2: #ff6b6b;
+      --accent3: #43e97b;
+      --text: #e8e8f0;
+      --muted: #7a7a99;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+    }
+
+    code, .mono { font-family: 'Space Mono', monospace; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* Sidebar */
+    #sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      width: 240px;
+      min-height: 100vh;
+      position: fixed;
+      left: 0; top: 0;
+      display: flex; flex-direction: column;
+      z-index: 100;
+    }
+
+    .logo {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo-mark {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800; margin-bottom: 10px;
+    }
+
+    .logo h1 { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .logo p { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    nav { padding: 16px 12px; flex: 1; }
+
+    .nav-section { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 0 8px 8px; margin-top: 12px; }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 8px;
+      cursor: pointer; transition: all 0.15s;
+      font-size: 13px; font-weight: 600; color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .nav-item:hover { background: var(--card); color: var(--text); }
+    .nav-item.active { background: rgba(108, 99, 255, 0.15); color: var(--accent); }
+    .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+
+    /* Main content */
+    #main { margin-left: 240px; padding: 32px; min-height: 100vh; }
+
+    /* Page header */
+    .page-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .page-title { font-size: 26px; font-weight: 800; }
+    .page-title span { color: var(--accent); }
+    .page-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    /* Stat cards */
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+
+    .stat-card.purple::before { background: var(--accent); }
+    .stat-card.red::before { background: var(--accent2); }
+    .stat-card.green::before { background: var(--accent3); }
+    .stat-card.blue::before { background: #38bdf8; }
+
+    .stat-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .stat-value { font-size: 32px; font-weight: 800; margin: 6px 0 2px; }
+    .stat-desc { font-size: 12px; color: var(--muted); }
+
+    /* Table */
+    .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      background: var(--surface);
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(108, 99, 255, 0.04); }
+
+    tbody td { padding: 12px 16px; font-size: 13px; }
+
+    .nomor-badge {
+      background: var(--surface);
+      color: var(--muted);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-family: 'Space Mono', monospace;
+      display: inline-block;
+    }
+
+    .label-badge {
+      background: rgba(108, 99, 255, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(108, 99, 255, 0.25);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 8px;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; border: none; transition: all 0.15s;
+      font-family: 'Syne', sans-serif;
+    }
+
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #5a53e0; }
+    .btn-success { background: rgba(67, 233, 123, 0.12); color: var(--accent3); border: 1px solid rgba(67, 233, 123, 0.25); }
+    .btn-success:hover { background: rgba(67, 233, 123, 0.2); }
+    .btn-danger { background: rgba(255, 107, 107, 0.1); color: var(--accent2); border: 1px solid rgba(255, 107, 107, 0.2); }
+    .btn-danger:hover { background: rgba(255, 107, 107, 0.2); }
+    .btn-ghost { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+    .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+    /* Inputs */
+    input, textarea, select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: 'Syne', sans-serif;
+      width: 100%;
+      transition: border 0.15s;
+      outline: none;
+    }
+
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+    input::placeholder { color: var(--muted); }
+
+    label { font-size: 12px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* Pagination */
+    .pagination { display: flex; align-items: center; gap: 6px; justify-content: center; margin-top: 20px; }
+
+    .pg-btn {
+      width: 34px; height: 34px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 13px; font-weight: 600;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--muted); transition: all 0.1s;
+    }
+
+    .pg-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .pg-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .pg-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      width: 100%;
+      max-width: 520px;
+      transform: translateY(20px);
+      transition: transform 0.2s;
+    }
+
+    .modal-overlay.open .modal { transform: translateY(0); }
+
+    .modal-title { font-size: 18px; font-weight: 800; margin-bottom: 20px; }
+
+    /* Toast */
+    #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+
+    .toast {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      min-width: 250px;
+      animation: slideIn 0.25s ease;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .toast.success { border-left: 3px solid var(--accent3); }
+    .toast.error { border-left: 3px solid var(--accent2); }
+    .toast.info { border-left: 3px solid var(--accent); }
+
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
+
+    /* Search & Filter bar */
+    .toolbar { display: flex; gap: 10px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
+    .toolbar input { max-width: 280px; }
+    .toolbar select { max-width: 220px; }
+
+    /* Training section */
+    .train-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    .log-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      color: var(--accent3);
+      min-height: 120px;
+      max-height: 260px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      display: inline-block; margin-right: 6px;
+    }
+
+    .status-dot.online { background: var(--accent3); box-shadow: 0 0 6px var(--accent3); }
+    .status-dot.offline { background: var(--accent2); }
+
+    /* Page visibility */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* Predict */
+    .predict-result {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 16px;
+    }
+
+    .intent-tag {
+      background: rgba(108, 99, 255, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(108, 99, 255, 0.3);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    .confidence-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .confidence-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent3));
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+
+    /* Label distribution */
+    .label-bar { margin-bottom: 10px; }
+    .label-bar-header { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+    .label-bar-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .label-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty-state {
+      text-align: center; padding: 60px 20px; color: var(--muted);
+    }
+    .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-state h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+    .empty-state p { font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside id="sidebar">
+  <div class="logo">
+    <div class="logo-mark">🧠</div>
+    <h1>Intent Manager</h1>
+    <p>ML Dataset & Model Tool</p>
+  </div>
+  <nav>
+    <div class="nav-section">Menu</div>
+    <div class="nav-item active" onclick="showPage('dataset')">
+      <span class="icon">📋</span> Dataset
+    </div>
+    <div class="nav-item" onclick="showPage('train')">
+      <span class="icon">⚡</span> Latih Model
+    </div>
+    <div class="nav-item" onclick="showPage('predict')">
+      <span class="icon">🔮</span> Prediksi
+    </div>
+    <div class="nav-item" onclick="showPage('stats')">
+      <span class="icon">📊</span> Statistik
+    </div>
+  </nav>
+  <div style="padding:16px 20px; border-top:1px solid var(--border); font-size:11px; color:var(--muted);">
+    <div style="margin-bottom:6px; font-weight:700;">Model Status</div>
+    <div id="sidebar-model-status">Memeriksa...</div>
+  </div>
+</aside>
+
+<!-- Main -->
+<main id="main">
+
+  <!-- PAGE: DATASET -->
+  <div id="page-dataset" class="page active">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Dataset <span>Intent</span></div>
+        <div class="page-sub">Kelola data teks dan label intent</div>
+      </div>
+      <button class="btn btn-primary" onclick="openAddModal()">+ Tambah Data</button>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stat-grid" id="dataset-stats-row">
+      <div class="stat-card purple">
+        <div class="stat-label">Total Data</div>
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-desc">Keseluruhan dataset</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-label">Total Label</div>
+        <div class="stat-value" id="stat-labels">—</div>
+        <div class="stat-desc">Kelas intent unik</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Halaman</div>
+        <div class="stat-value" id="stat-page">—</div>
+        <div class="stat-desc">Navigasi tabel</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-label">Hasil Filter</div>
+        <div class="stat-value" id="stat-filtered">—</div>
+        <div class="stat-desc">Data ditemukan</div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <input type="text" id="search-input" placeholder="🔍 Cari teks atau label..." oninput="onSearch()" />
+      <select id="label-filter" onchange="onSearch()">
+        <option value="">Semua Label</option>
+      </select>
+      <select id="per-page-select" onchange="onPerPageChange()">
+        <option value="10">10 / halaman</option>
+        <option value="20" selected>20 / halaman</option>
+        <option value="50">50 / halaman</option>
+        <option value="100">100 / halaman</option>
+      </select>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:70px">No</th>
+            <th>Teks</th>
+            <th style="width:200px">Label</th>
+            <th style="width:120px; text-align:center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="dataset-tbody">
+          <tr><td colspan="4"><div class="empty-state"><div class="spinner"></div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="pagination" class="pagination"></div>
+  </div>
+
+  <!-- PAGE: TRAIN -->
+  <div id="page-train" class="page">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Latih <span>Model</span></div>
+        <div class="page-sub">Buat model intent dan vectorizer dari dataset</div>
+      </div>
+    </div>
+
+    <div class="train-grid">
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <div style="font-size:14px; font-weight:700; margin-bottom:14px;">Status Model</div>
+          <div id="model-status-card" style="font-size:13px; color:var(--muted);">Memeriksa...</div>
+        </div>
+
+        <div class="card">
+          <div style="font-size:14px; font-weight:700; margin-bottom:6px;">Konfigurasi Training</div>
+          <div style="font-size:12px; color:var(--muted); margin-bottom:16px;">Algoritma: TF-IDF + Logistic Regression</div>
+          <div style="margin-bottom:14px;">
+            <label>Algoritma Vektorisasi</label>
+            <select disabled>
+              <option>TF-IDF Vectorizer</option>
+            </select>
+          </div>
+          <div style="margin-bottom:18px;">
+            <label>Algoritma Klasifikasi</label>
+            <select disabled>
+              <option>Logistic Regression</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="train-btn" onclick="trainModel()" style="width:100%;">
+            ⚡ Mulai Training
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div style="font-size:14px; font-weight:700; margin-bottom:12px;">📋 Log Training</div>
+          <div class="log-box" id="train-log">Belum ada proses training...\n</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: PREDICT -->
+  <div id="page-predict" class="page">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Uji <span>Prediksi</span></div>
+        <div class="page-sub">Tes model intent dengan teks bebas</div>
+      </div>
+    </div>
+
+    <div style="max-width:640px;">
+      <div class="card">
+        <label>Masukkan Teks</label>
+        <textarea id="predict-text" rows="3" placeholder="contoh: saya ingin meminjam Aula Barat..." style="resize:vertical; margin-bottom:12px;"></textarea>
+        <button class="btn btn-primary" onclick="predict()" id="predict-btn">🔮 Prediksi Intent</button>
+      </div>
+
+      <div class="predict-result" id="predict-result" style="display:none;">
+        <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px;">Hasil Prediksi</div>
+        <div style="font-size:13px; color:var(--muted);">Teks: <span id="result-text" style="color:var(--text);"></span></div>
+        <div class="intent-tag" id="result-intent"></div>
+        <div style="margin-top:14px;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+            <span style="color:var(--muted);">Confidence</span>
+            <span id="result-confidence" style="font-weight:700;"></span>
+          </div>
+          <div class="confidence-bar">
+            <div class="confidence-fill" id="confidence-fill" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: STATS -->
+  <div id="page-stats" class="page">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Statistik <span>Dataset</span></div>
+        <div class="page-sub">Distribusi label dan ringkasan data</div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 2fr; gap:20px;">
+      <div class="card">
+        <div style="font-size:14px; font-weight:700; margin-bottom:16px;">Ringkasan</div>
+        <div id="stats-summary" style="font-size:13px; color:var(--muted);">Memuat...</div>
+      </div>
+      <div class="card">
+        <div style="font-size:14px; font-weight:700; margin-bottom:16px;">Distribusi Label</div>
+        <div id="label-distribution" style="max-height:500px; overflow-y:auto;">Memuat...</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Modal: Add / Edit -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Tambah Data</div>
+    <input type="hidden" id="modal-nomor" />
+    <div style="margin-bottom:14px;">
+      <label>Teks</label>
+      <textarea id="modal-texts" rows="3" placeholder="Masukkan teks intent..." style="resize:vertical;"></textarea>
+    </div>
+    <div style="margin-bottom:20px;">
+      <label>Label Intent</label>
+      <input type="text" id="modal-label" placeholder="contoh: peminjaman_ruang" list="label-suggestions" />
+      <datalist id="label-suggestions"></datalist>
+    </div>
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="closeModal()">Batal</button>
+      <button class="btn btn-primary" id="modal-save-btn" onclick="saveModal()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<script>
+  const API = '';
+  let currentPage = 1;
+  let perPage = 20;
+  let searchQuery = '';
+  let labelFilter = '';
+  let allLabels = [];
+  let editingNomor = null;
+
+  // ── Navigation ──────────────────────────────────────────
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.textContent.trim().toLowerCase().includes(name === 'dataset' ? 'dataset' : name === 'train' ? 'latih' : name === 'predict' ? 'prediksi' : 'statistik')) {
+        n.classList.add('active');
+      }
+    });
+
+    if (name === 'dataset') loadDataset();
+    if (name === 'train') { loadModelStatus(); }
+    if (name === 'stats') loadStats();
+  }
+
+  // ── Toast ────────────────────────────────────────────────
+  function toast(msg, type = 'info') {
+    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.innerHTML = `<span>${icons[type]}</span> ${msg}`;
+    document.getElementById('toast-container').appendChild(el);
+    setTimeout(() => {
+      el.style.animation = 'fadeOut 0.3s forwards';
+      setTimeout(() => el.remove(), 300);
+    }, 3000);
+  }
+
+  // ── Load Labels ──────────────────────────────────────────
+  async function loadLabels() {
+    const res = await fetch(`${API}/api/dataset/labels`);
+    allLabels = await res.json();
+    const filter = document.getElementById('label-filter');
+    const saved = filter.value;
+    filter.innerHTML = '<option value="">Semua Label</option>' + allLabels.map(l => `<option value="${l}">${l}</option>`).join('');
+    filter.value = saved;
+
+    const datalist = document.getElementById('label-suggestions');
+    datalist.innerHTML = allLabels.map(l => `<option value="${l}">`).join('');
+  }
+
+  // ── Dataset ──────────────────────────────────────────────
+  async function loadDataset() {
+    await loadLabels();
+    const params = new URLSearchParams({ page: currentPage, per_page: perPage });
+    if (searchQuery) params.append('search', searchQuery);
+    if (labelFilter) params.append('label', labelFilter);
+
+    const res = await fetch(`${API}/api/dataset?${params}`);
+    const json = await res.json();
+
+    document.getElementById('stat-total').textContent = json.total;
+    document.getElementById('stat-filtered').textContent = json.total;
+    document.getElementById('stat-labels').textContent = allLabels.length;
+    document.getElementById('stat-page').textContent = `${json.page}/${json.total_pages}`;
+
+    renderTable(json.data);
+    renderPagination(json.page, json.total_pages);
+  }
+
+  function renderTable(rows) {
+    const tbody = document.getElementById('dataset-tbody');
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="icon">🔍</div><h3>Data tidak ditemukan</h3><p>Coba ubah filter atau kata kunci pencarian</p></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td><span class="nomor-badge">#${r.nomor}</span></td>
+        <td style="max-width:420px; word-break:break-word;">${escHtml(r.texts)}</td>
+        <td><span class="label-badge">${escHtml(r.label)}</span></td>
+        <td style="text-align:center;">
+          <button class="btn btn-ghost btn-sm" onclick="openEditModal(${r.nomor}, ${JSON.stringify(r.texts).replace(/"/g, '&quot;')}, '${r.label}')">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteItem(${r.nomor})" style="margin-left:4px;">🗑️</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function renderPagination(page, total) {
+    const pg = document.getElementById('pagination');
+    if (total <= 1) { pg.innerHTML = ''; return; }
+    let html = '';
+    html += `<button class="pg-btn" onclick="goPage(${page-1})" ${page===1?'disabled':''}>‹</button>`;
+
+    const range = [];
+    for (let i = Math.max(1, page-2); i <= Math.min(total, page+2); i++) range.push(i);
+    if (range[0] > 1) { html += `<button class="pg-btn" onclick="goPage(1)">1</button>`; if (range[0] > 2) html += `<span class="pg-btn" style="pointer-events:none">…</span>`; }
+    range.forEach(i => {
+      html += `<button class="pg-btn ${i===page?'active':''}" onclick="goPage(${i})">${i}</button>`;
+    });
+    if (range[range.length-1] < total) {
+      if (range[range.length-1] < total-1) html += `<span class="pg-btn" style="pointer-events:none">…</span>`;
+      html += `<button class="pg-btn" onclick="goPage(${total})">${total}</button>`;
+    }
+    html += `<button class="pg-btn" onclick="goPage(${page+1})" ${page===total?'disabled':''}>›</button>`;
+    pg.innerHTML = html;
+  }
+
+  function goPage(p) { currentPage = p; loadDataset(); }
+  function onSearch() { currentPage = 1; searchQuery = document.getElementById('search-input').value; labelFilter = document.getElementById('label-filter').value; loadDataset(); }
+  function onPerPageChange() { perPage = parseInt(document.getElementById('per-page-select').value); currentPage = 1; loadDataset(); }
+  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  // ── CRUD ─────────────────────────────────────────────────
+  function openAddModal() {
+    editingNomor = null;
+    document.getElementById('modal-title').textContent = 'Tambah Data';
+    document.getElementById('modal-texts').value = '';
+    document.getElementById('modal-label').value = '';
+    document.getElementById('modal-save-btn').textContent = 'Simpan';
+    document.getElementById('modal-overlay').classList.add('open');
+    document.getElementById('modal-texts').focus();
+  }
+
+  function openEditModal(nomor, texts, label) {
+    editingNomor = nomor;
+    document.getElementById('modal-title').textContent = `Edit Data #${nomor}`;
+    document.getElementById('modal-texts').value = texts;
+    document.getElementById('modal-label').value = label;
+    document.getElementById('modal-save-btn').textContent = 'Update';
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+  function closeModalOutside(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
+
+  async function saveModal() {
+    const texts = document.getElementById('modal-texts').value.trim();
+    const label = document.getElementById('modal-label').value.trim();
+    if (!texts || !label) { toast('Teks dan label wajib diisi', 'error'); return; }
+
+    const btn = document.getElementById('modal-save-btn');
+    btn.disabled = true;
+
+    try {
+      if (editingNomor) {
+        const res = await fetch(`${API}/api/dataset/${editingNomor}`, {
+          method: 'PUT', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ texts, label })
+        });
+        if (!res.ok) throw new Error('Gagal update');
+        toast('Data berhasil diupdate', 'success');
+      } else {
+        const res = await fetch(`${API}/api/dataset`, {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ texts, label })
+        });
+        if (!res.ok) throw new Error('Gagal tambah');
+        toast('Data berhasil ditambahkan', 'success');
+      }
+      closeModal();
+      loadDataset();
+    } catch(e) {
+      toast(e.message, 'error');
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  async function deleteItem(nomor) {
+    if (!confirm(`Hapus data #${nomor}?`)) return;
+    const res = await fetch(`${API}/api/dataset/${nomor}`, { method: 'DELETE' });
+    if (res.ok) { toast('Data berhasil dihapus', 'success'); loadDataset(); }
+    else { toast('Gagal menghapus data', 'error'); }
+  }
+
+  // ── Training ─────────────────────────────────────────────
+  async function loadModelStatus() {
+    const res = await fetch(`${API}/api/model/status`);
+    const json = await res.json();
+    const card = document.getElementById('model-status-card');
+    const sidebar = document.getElementById('sidebar-model-status');
+
+    if (json.model_exists && json.vectorizer_exists) {
+      const size = ((json.model_size + json.vectorizer_size) / 1024).toFixed(1);
+      const date = new Date(json.model_modified * 1000).toLocaleString('id-ID');
+      card.innerHTML = `
+        <div style="margin-bottom:10px;"><span class="status-dot online"></span> Model tersedia</div>
+        <div style="font-size:12px; color:var(--muted); line-height:1.8;">
+          📁 intent_model.pkl<br>
+          📁 vectorizer.pkl<br>
+          💾 Total ukuran: ${size} KB<br>
+          🕐 Dilatih: ${date}
+        </div>`;
+      sidebar.innerHTML = `<span class="status-dot online"></span><span style="color:var(--accent3); font-size:12px;">Model siap</span>`;
+    } else {
+      card.innerHTML = `<div><span class="status-dot offline"></span> Model belum tersedia</div><div style="font-size:12px;color:var(--muted);margin-top:6px;">Klik "Mulai Training" untuk membuat model.</div>`;
+      sidebar.innerHTML = `<span class="status-dot offline"></span><span style="color:var(--accent2); font-size:12px;">Belum dilatih</span>`;
+    }
+  }
+
+  async function trainModel() {
+    const btn = document.getElementById('train-btn');
+    const log = document.getElementById('train-log');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Melatih Model...';
+    log.textContent = '[INFO] Memulai proses training...\n';
+
+    try {
+      log.textContent += '[INFO] Membaca dataset...\n';
+      const res = await fetch(`${API}/api/train`, { method: 'POST' });
+      const json = await res.json();
+
+      if (!res.ok) throw new Error(json.error || 'Training gagal');
+
+      log.textContent += `[OK] Dataset dimuat: ${json.total_data} data\n`;
+      log.textContent += `[OK] Total kelas: ${json.total_labels}\n`;
+      log.textContent += `[OK] Label: ${json.labels.join(', ')}\n`;
+      log.textContent += `[OK] Vektorisasi TF-IDF selesai\n`;
+      log.textContent += `[OK] Logistic Regression selesai dilatih\n`;
+      log.textContent += `[SAVE] ${json.model_file}\n`;
+      log.textContent += `[SAVE] ${json.vectorizer_file}\n`;
+      log.textContent += `\n✅ ${json.message}\n`;
+      toast('Model berhasil dilatih!', 'success');
+      loadModelStatus();
+    } catch(e) {
+      log.textContent += `[ERROR] ${e.message}\n`;
+      toast(e.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '⚡ Mulai Training';
+    }
+  }
+
+  // ── Predict ───────────────────────────────────────────────
+  async function predict() {
+    const text = document.getElementById('predict-text').value.trim();
+    if (!text) { toast('Masukkan teks terlebih dahulu', 'error'); return; }
+
+    const btn = document.getElementById('predict-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Memproses...';
+
+    try {
+      const res = await fetch(`${API}/api/predict`, {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ text })
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+
+      document.getElementById('result-text').textContent = json.text;
+      document.getElementById('result-intent').textContent = json.intent;
+      document.getElementById('result-confidence').textContent = `${json.confidence}%`;
+      document.getElementById('confidence-fill').style.width = `${json.confidence}%`;
+      document.getElementById('predict-result').style.display = 'block';
+    } catch(e) {
+      toast(e.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '🔮 Prediksi Intent';
+    }
+  }
+
+  document.getElementById('predict-text').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); predict(); }
+  });
+
+  // ── Stats ─────────────────────────────────────────────────
+  async function loadStats() {
+    const res = await fetch(`${API}/api/dataset/stats`);
+    const json = await res.json();
+
+    document.getElementById('stats-summary').innerHTML = `
+      <div style="line-height:2.2; font-size:14px;">
+        <div>📦 <strong style="color:var(--text);">${json.total}</strong> total data</div>
+        <div>🏷️ <strong style="color:var(--text);">${json.total_labels}</strong> label unik</div>
+        <div>📊 <strong style="color:var(--text);">${Math.round(json.total/json.total_labels)}</strong> rata-rata per label</div>
+      </div>`;
+
+    const sorted = Object.entries(json.label_counts).sort((a,b) => b[1]-a[1]);
+    const max = sorted[0][1];
+    document.getElementById('label-distribution').innerHTML = sorted.map(([label, count]) => `
+      <div class="label-bar">
+        <div class="label-bar-header">
+          <span style="color:var(--text); font-weight:600; font-size:12px;">${label}</span>
+          <span style="color:var(--muted); font-size:12px;">${count}</span>
+        </div>
+        <div class="label-bar-track">
+          <div class="label-bar-fill" style="width:${(count/max*100).toFixed(1)}%"></div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── Init ──────────────────────────────────────────────────
+  loadDataset();
+  loadModelStatus();
+</script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+import json
+import os
+import pickle
+
+from flask import Flask, jsonify, request, send_from_directory
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+
+app = Flask(__name__, static_folder="static")
+
+@app.after_request
+def add_cors(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
+    return response
+
+@app.route("/api/<path:p>", methods=["OPTIONS"])
+def options_handler(p):
+    return jsonify({}), 200
+
+DATASET_PATH = "dataset.json"
+MODEL_PATH = "intent_model.pkl"
+VECTORIZER_PATH = "vectorizer.pkl"
+
+
+def load_dataset():
+    if not os.path.exists(DATASET_PATH):
+        return []
+    with open(DATASET_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_dataset(data):
+    with open(DATASET_PATH, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+# ─── Dataset CRUD ───────────────────────────────────────────────
+
+@app.route("/api/dataset", methods=["GET"])
+def get_dataset():
+    data = load_dataset()
+    page = int(request.args.get("page", 1))
+    per_page = int(request.args.get("per_page", 20))
+    search = request.args.get("search", "").lower()
+    label_filter = request.args.get("label", "").lower()
+
+    filtered = data
+    if search:
+        filtered = [
+            d for d in filtered
+            if search in d["texts"].lower() or search in d["label"].lower()
+        ]
+    if label_filter:
+        filtered = [d for d in filtered if d["label"].lower() == label_filter]
+
+    total = len(filtered)
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated = filtered[start:end]
+
+    return jsonify({
+        "data": paginated,
+        "total": total,
+        "page": page,
+        "per_page": per_page,
+        "total_pages": (total + per_page - 1) // per_page
+    })
+
+
+@app.route("/api/dataset/labels", methods=["GET"])
+def get_labels():
+    data = load_dataset()
+    labels = sorted(set(d["label"] for d in data))
+    return jsonify(labels)
+
+
+@app.route("/api/dataset/stats", methods=["GET"])
+def get_stats():
+    data = load_dataset()
+    label_counts = {}
+    for d in data:
+        label_counts[d["label"]] = label_counts.get(d["label"], 0) + 1
+    return jsonify({
+        "total": len(data),
+        "total_labels": len(label_counts),
+        "label_counts": label_counts
+    })
+
+
+@app.route("/api/dataset", methods=["POST"])
+def add_item():
+    data = load_dataset()
+    body = request.json
+    texts = body.get("texts", "").strip()
+    label = body.get("label", "").strip()
+
+    if not texts or not label:
+        return jsonify({"error": "texts dan label wajib diisi"}), 400
+
+    next_nomor = max((d["nomor"] for d in data), default=0) + 1
+    new_item = {"nomor": next_nomor, "texts": texts, "label": label}
+    data.append(new_item)
+    save_dataset(data)
+    return jsonify(new_item), 201
+
+
+@app.route("/api/dataset/<int:nomor>", methods=["PUT"])
+def update_item(nomor):
+    data = load_dataset()
+    body = request.json
+    for item in data:
+        if item["nomor"] == nomor:
+            item["texts"] = body.get("texts", item["texts"]).strip()
+            item["label"] = body.get("label", item["label"]).strip()
+            save_dataset(data)
+            return jsonify(item)
+    return jsonify({"error": "Data tidak ditemukan"}), 404
+
+
+@app.route("/api/dataset/<int:nomor>", methods=["DELETE"])
+def delete_item(nomor):
+    data = load_dataset()
+    new_data = [d for d in data if d["nomor"] != nomor]
+    if len(new_data) == len(data):
+        return jsonify({"error": "Data tidak ditemukan"}), 404
+    save_dataset(new_data)
+    return jsonify({"message": "Data berhasil dihapus"})
+
+
+# ─── Model Training ──────────────────────────────────────────────
+
+@app.route("/api/train", methods=["POST"])
+def train_model():
+    data = load_dataset()
+    if len(data) < 2:
+        return jsonify({"error": "Dataset terlalu sedikit untuk melatih model"}), 400
+
+    texts = [item["texts"] for item in data]
+    labels = [item["label"] for item in data]
+
+    vectorizer = TfidfVectorizer()
+    X = vectorizer.fit_transform(texts)
+
+    model = LogisticRegression(max_iter=1000)
+    model.fit(X, labels)
+
+    pickle.dump(model, open(MODEL_PATH, "wb"))
+    pickle.dump(vectorizer, open(VECTORIZER_PATH, "wb"))
+
+    unique_labels = list(set(labels))
+    return jsonify({
+        "message": "Model berhasil dilatih dan disimpan",
+        "total_data": len(data),
+        "total_labels": len(unique_labels),
+        "labels": sorted(unique_labels),
+        "model_file": MODEL_PATH,
+        "vectorizer_file": VECTORIZER_PATH
+    })
+
+
+@app.route("/api/model/status", methods=["GET"])
+def model_status():
+    model_exists = os.path.exists(MODEL_PATH)
+    vectorizer_exists = os.path.exists(VECTORIZER_PATH)
+    info = {"model_exists": model_exists, "vectorizer_exists": vectorizer_exists}
+    if model_exists:
+        info["model_size"] = os.path.getsize(MODEL_PATH)
+        info["model_modified"] = os.path.getmtime(MODEL_PATH)
+    if vectorizer_exists:
+        info["vectorizer_size"] = os.path.getsize(VECTORIZER_PATH)
+    return jsonify(info)
+
+
+@app.route("/api/predict", methods=["POST"])
+def predict():
+    if not os.path.exists(MODEL_PATH) or not os.path.exists(VECTORIZER_PATH):
+        return jsonify({"error": "Model belum dilatih"}), 400
+    body = request.json
+    text = body.get("text", "").strip()
+    if not text:
+        return jsonify({"error": "text wajib diisi"}), 400
+
+    model = pickle.load(open(MODEL_PATH, "rb"))
+    vectorizer = pickle.load(open(VECTORIZER_PATH, "rb"))
+    X = vectorizer.transform([text])
+    prediction = model.predict(X)[0]
+    proba = model.predict_proba(X)[0]
+    confidence = float(max(proba))
+    return jsonify({"text": text, "intent": prediction, "confidence": round(confidence * 100, 2)})
+
+
+# ─── Serve Frontend ──────────────────────────────────────────────
+
+@app.route("/")
+def index():
+    return send_from_directory("static", "index.html")
+
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)
