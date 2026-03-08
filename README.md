@@ -43,8 +43,8 @@ Pastikan sudah terinstal:
 ### 2. Clone / Unduh Proyek
 
 ```bash
-git clone <url-repo>
-cd intent-manager
+git clone https://github.com/ahmadadityo/intent_model.git
+cd intent_model
 ```
 
 Atau ekstrak file ZIP ke folder pilihan Anda.
@@ -242,4 +242,4 @@ File `dataset.json` berformat array JSON dengan struktur:
 
 ## 📄 Lisensi
 
-Proyek ini dikembangkan untuk keperluan internal. Silakan digunakan dan dimodifikasi sesuai kebutuhan.
+Proyek ini dikembangkan untuk keperluan belajar. Silakan digunakan dan dimodifikasi sesuai kebutuhan.
