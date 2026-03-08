@@ -9,6 +9,7 @@ Sistem manajemen dataset dan pelatihan model machine learning untuk klasifikasi 
 | Fitur | Deskripsi |
 |---|---|
 | 📋 **Kelola Dataset** | Lihat, tambah, ubah, dan hapus data intent dari file `dataset.json` |
+| 🏷️ **Kelola Label** | Kelola data label dari file `dataset.json` |
 | ⚡ **Latih Model** | Buat model intent (`.pkl`) menggunakan TF-IDF + Logistic Regression |
 | 🔮 **Uji Prediksi** | Tes model secara langsung dari antarmuka web |
 | 📊 **Statistik** | Distribusi label dan ringkasan dataset |
