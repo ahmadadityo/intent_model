@@ -370,6 +370,70 @@
     #reset-filter-btn.visible {
       display: inline-flex;
     }
+
+    /* Confirm Delete Modal */
+    .confirm-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .confirm-overlay.open { opacity: 1; pointer-events: all; }
+
+    .confirm-modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 28px 24px;
+      width: 100%;
+      max-width: 380px;
+      transform: translateY(16px) scale(0.98);
+      transition: transform 0.2s;
+      text-align: center;
+    }
+    .confirm-overlay.open .confirm-modal { transform: translateY(0) scale(1); }
+
+    .confirm-icon {
+      width: 56px; height: 56px;
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.25);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      margin: 0 auto 16px;
+    }
+
+    .confirm-title {
+      font-size: 17px; font-weight: 800;
+      margin-bottom: 8px; color: var(--text);
+    }
+
+    .confirm-desc {
+      font-size: 13px; color: var(--muted);
+      line-height: 1.6; margin-bottom: 24px;
+    }
+
+    .confirm-desc strong {
+      color: var(--accent2);
+      font-family: 'Space Mono', monospace;
+    }
+
+    .confirm-actions {
+      display: flex; gap: 10px; justify-content: center;
+    }
+
+    .confirm-actions .btn {
+      flex: 1; justify-content: center;
+    }
+
+    .btn-danger-solid {
+      background: var(--accent2);
+      color: #fff;
+      border: none;
+    }
+    .btn-danger-solid:hover { background: #e85555; }
   </style>
 </head>
 <body>
@@ -587,7 +651,7 @@
     </div>
     <div style="margin-bottom:20px;">
       <label>Label Intent</label>
-      <input type="text" id="modal-label" placeholder="contoh: peminjaman_ruang" list="label-suggestions" />
+      <input type="text" id="modal-label" placeholder="contoh: info_lokasi_wisata" list="label-suggestions" />
       <datalist id="label-suggestions"></datalist>
     </div>
     <div style="display:flex; gap:10px; justify-content:flex-end;">
@@ -599,6 +663,22 @@
 
 <!-- Toast container -->
 <div id="toast-container"></div>
+
+<!-- Modal: Confirm Delete -->
+<div class="confirm-overlay" id="confirm-overlay" onclick="closeConfirmOutside(event)">
+  <div class="confirm-modal">
+    <div class="confirm-icon">🗑️</div>
+    <div class="confirm-title">Hapus Data?</div>
+    <div class="confirm-desc">
+      Anda akan menghapus data <strong id="confirm-nomor"></strong>.<br>
+      Tindakan ini tidak dapat dibatalkan.
+    </div>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Batal</button>
+      <button class="btn btn-danger-solid" onclick="confirmDelete()">Ya, Hapus</button>
+    </div>
+  </div>
+</div>
 
 <script>
   const API = '';
@@ -801,8 +881,27 @@
     }
   }
 
-  async function deleteItem(nomor) {
-    if (!confirm(`Hapus data #${nomor}?`)) return;
+  let pendingDeleteNomor = null;
+
+  function deleteItem(nomor) {
+    pendingDeleteNomor = nomor;
+    document.getElementById('confirm-nomor').textContent = `#${nomor}`;
+    document.getElementById('confirm-overlay').classList.add('open');
+  }
+
+  function closeConfirm() {
+    pendingDeleteNomor = null;
+    document.getElementById('confirm-overlay').classList.remove('open');
+  }
+
+  function closeConfirmOutside(e) {
+    if (e.target === document.getElementById('confirm-overlay')) closeConfirm();
+  }
+
+  async function confirmDelete() {
+    if (!pendingDeleteNomor) return;
+    const nomor = pendingDeleteNomor;
+    closeConfirm();
     const res = await fetch(`${API}/api/dataset/${nomor}`, { method: 'DELETE' });
     if (res.ok) { toast('Data berhasil dihapus', 'success'); loadDataset(); }
     else { toast('Gagal menghapus data', 'error'); }
