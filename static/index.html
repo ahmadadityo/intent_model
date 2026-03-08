@@ -363,6 +363,13 @@
     .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
     .empty-state h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
     .empty-state p { font-size: 13px; }
+
+    #reset-filter-btn {
+      display: none;
+    }
+    #reset-filter-btn.visible {
+      display: inline-flex;
+    }
   </style>
 </head>
 <body>
@@ -444,6 +451,9 @@
         <option value="50">50 / halaman</option>
         <option value="100">100 / halaman</option>
       </select>
+      <button class="btn btn-danger" id="reset-filter-btn" onclick="resetFilter()" title="Reset semua filter ke default">
+        ✕ Reset Filter
+      </button>
     </div>
 
     <div class="table-container">
@@ -700,7 +710,38 @@
   }
 
   function goPage(p) { currentPage = p; loadDataset(); }
-  function onSearch() { currentPage = 1; searchQuery = document.getElementById('search-input').value; labelFilter = document.getElementById('label-filter').value; loadDataset(); }
+
+  function updateResetBtn() {
+    const btn = document.getElementById('reset-filter-btn');
+    const hasFilter = document.getElementById('search-input').value !== '' || document.getElementById('label-filter').value !== '';
+    if (hasFilter) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  }
+
+  function onSearch() {
+    currentPage = 1;
+    searchQuery = document.getElementById('search-input').value;
+    labelFilter = document.getElementById('label-filter').value;
+    updateResetBtn();
+    loadDataset();
+  }
+
+  function resetFilter() {
+    document.getElementById('search-input').value = '';
+    document.getElementById('label-filter').value = '';
+    document.getElementById('per-page-select').value = '20';
+    searchQuery = '';
+    labelFilter = '';
+    perPage = 20;
+    currentPage = 1;
+    updateResetBtn();
+    loadDataset();
+    toast('Filter berhasil direset', 'info');
+  }
+
   function onPerPageChange() { perPage = parseInt(document.getElementById('per-page-select').value); currentPage = 1; loadDataset(); }
   function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
