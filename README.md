@@ -123,6 +123,21 @@ Halaman utama untuk mengelola data intent.
 
 ---
 
+###  🏷️ Halaman Label
+
+Halaman untuk kelola data Label
+
+- Mini stats — total label, total data, rata-rata per label
+- Daftar label distinct — tiap label tampil sekali dengan jumlah datanya
+- Edit inline — isi kolom "Label Baru" untuk perbaiki typo; badge → label_baru muncul real-time
+- Deteksi merge — badge kuning ⚡ akan digabung otomatis muncul jika label tujuan sudah ada
+- Sticky save bar — muncul di bawah layar saat ada perubahan pending, lengkap dengan counter
+- Modal konfirmasi — menampilkan daftar semua perubahan sebelum disimpan
+- Hapus label — tombol 🗑️ per baris + konfirmasi sebelum menghapus semua data terkait
+- Filter pencarian label di halaman tersebut
+
+---
+
 ### ⚡ Halaman Latih Model
 
 Halaman untuk melatih model machine learning dari dataset.
@@ -175,6 +190,9 @@ Menampilkan ringkasan dan distribusi dataset:
 | `DELETE` | `/api/dataset/<nomor>` | Hapus data berdasarkan nomor |
 | `GET` | `/api/dataset/labels` | Daftar semua label unik |
 | `GET` | `/api/dataset/stats` | Statistik dataset |
+| `GET` | `/api/labels` | Ambil semua label unik beserta jumlah datanya |
+| `GET` | `/api/labels/rename` | Ganti nama label secara bulk (otomatis merge jika label tujuan sudah ada) |
+| `DELETE` | `/api/labels/delete` | Hapus semua data dengan label tertentu |
 | `POST` | `/api/train` | Latih dan simpan model |
 | `GET` | `/api/model/status` | Status ketersediaan model |
 | `POST` | `/api/predict` | Prediksi intent dari teks |

@@ -30,7 +30,6 @@
 
     code, .mono { font-family: 'Space Mono', monospace; }
 
-    /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
@@ -82,7 +81,6 @@
     /* Main content */
     #main { margin-left: 240px; padding: 32px; min-height: 100vh; }
 
-    /* Page header */
     .page-header {
       display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 28px;
@@ -92,7 +90,6 @@
     .page-title span { color: var(--accent); }
     .page-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
 
-    /* Cards */
     .card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -100,7 +97,6 @@
       padding: 20px;
     }
 
-    /* Stat cards */
     .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
 
     .stat-card {
@@ -126,7 +122,6 @@
     .stat-value { font-size: 32px; font-weight: 800; margin: 6px 0 2px; }
     .stat-desc { font-size: 12px; color: var(--muted); }
 
-    /* Table */
     .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
 
     table { width: 100%; border-collapse: collapse; }
@@ -145,7 +140,6 @@
     tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: rgba(108, 99, 255, 0.04); }
-
     tbody td { padding: 12px 16px; font-size: 13px; }
 
     .nomor-badge {
@@ -169,7 +163,6 @@
       white-space: nowrap;
     }
 
-    /* Buttons */
     .btn {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 8px 16px; border-radius: 8px;
@@ -180,6 +173,7 @@
 
     .btn-primary { background: var(--accent); color: #fff; }
     .btn-primary:hover { background: #5a53e0; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn-success { background: rgba(67, 233, 123, 0.12); color: var(--accent3); border: 1px solid rgba(67, 233, 123, 0.25); }
     .btn-success:hover { background: rgba(67, 233, 123, 0.2); }
     .btn-danger { background: rgba(255, 107, 107, 0.1); color: var(--accent2); border: 1px solid rgba(255, 107, 107, 0.2); }
@@ -188,7 +182,9 @@
     .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
     .btn-sm { padding: 5px 10px; font-size: 12px; }
 
-    /* Inputs */
+    .btn-danger-solid { background: var(--accent2); color: #fff; border: none; }
+    .btn-danger-solid:hover { background: #e85555; }
+
     input, textarea, select {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -207,7 +203,6 @@
 
     label { font-size: 12px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
 
-    /* Pagination */
     .pagination { display: flex; align-items: center; gap: 6px; justify-content: center; margin-top: 20px; }
 
     .pg-btn {
@@ -222,7 +217,6 @@
     .pg-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
     .pg-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
 
-    /* Modal */
     .modal-overlay {
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.7);
@@ -246,10 +240,8 @@
     }
 
     .modal-overlay.open .modal { transform: translateY(0); }
-
     .modal-title { font-size: 18px; font-weight: 800; margin-bottom: 20px; }
 
-    /* Toast */
     #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
 
     .toast {
@@ -271,12 +263,10 @@
     @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
 
-    /* Search & Filter bar */
     .toolbar { display: flex; gap: 10px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
     .toolbar input { max-width: 280px; }
     .toolbar select { max-width: 220px; }
 
-    /* Training section */
     .train-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
     .log-box {
@@ -301,11 +291,9 @@
     .status-dot.online { background: var(--accent3); box-shadow: 0 0 6px var(--accent3); }
     .status-dot.offline { background: var(--accent2); }
 
-    /* Page visibility */
     .page { display: none; }
     .page.active { display: block; }
 
-    /* Predict */
     .predict-result {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -341,7 +329,6 @@
       transition: width 0.5s ease;
     }
 
-    /* Label distribution */
     .label-bar { margin-bottom: 10px; }
     .label-bar-header { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
     .label-bar-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
@@ -364,14 +351,9 @@
     .empty-state h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
     .empty-state p { font-size: 13px; }
 
-    #reset-filter-btn {
-      display: none;
-    }
-    #reset-filter-btn.visible {
-      display: inline-flex;
-    }
+    #reset-filter-btn { display: none; }
+    #reset-filter-btn.visible { display: inline-flex; }
 
-    /* Confirm Delete Modal */
     .confirm-overlay {
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.75);
@@ -388,7 +370,7 @@
       border-radius: 16px;
       padding: 28px 28px 24px;
       width: 100%;
-      max-width: 380px;
+      max-width: 420px;
       transform: translateY(16px) scale(0.98);
       transition: transform 0.2s;
       text-align: center;
@@ -405,35 +387,138 @@
       margin: 0 auto 16px;
     }
 
-    .confirm-title {
-      font-size: 17px; font-weight: 800;
-      margin-bottom: 8px; color: var(--text);
+    .confirm-title { font-size: 17px; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+    .confirm-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+    .confirm-desc strong { color: var(--accent2); font-family: 'Space Mono', monospace; }
+    .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+    .confirm-actions .btn { flex: 1; justify-content: center; }
+
+    /* ── Label Page Styles ── */
+    .label-info-banner {
+      background: rgba(108,99,255,0.07);
+      border: 1px solid rgba(108,99,255,0.18);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 22px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
     }
 
-    .confirm-desc {
-      font-size: 13px; color: var(--muted);
-      line-height: 1.6; margin-bottom: 24px;
+    .rename-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 16px;
+      margin-bottom: 8px;
+      transition: border-color 0.15s, background 0.15s;
     }
 
-    .confirm-desc strong {
-      color: var(--accent2);
-      font-family: 'Space Mono', monospace;
+    .rename-row:hover { border-color: rgba(108,99,255,0.4); background: rgba(108,99,255,0.03); }
+    .rename-row.is-dirty { border-color: rgba(108,99,255,0.5); background: rgba(108,99,255,0.05); }
+
+    .rename-row .lbl-info { flex: 0 0 auto; min-width: 0; width: 260px; }
+    .rename-row .lbl-name { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .rename-row .lbl-count { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+    .rename-row .arrow-col {
+      color: var(--muted);
+      font-size: 16px;
+      flex: 0 0 auto;
     }
 
-    .confirm-actions {
-      display: flex; gap: 10px; justify-content: center;
+    .rename-row .input-col { flex: 1; min-width: 0; }
+    .rename-row .input-col input { width: 100%; }
+
+    .rename-row .action-col { flex: 0 0 auto; }
+
+    .pending-arrow {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 700;
+      background: rgba(108,99,255,0.12);
+      border-radius: 4px;
+      padding: 2px 7px;
+      white-space: nowrap;
     }
 
-    .confirm-actions .btn {
-      flex: 1; justify-content: center;
+    .merge-badge {
+      font-size: 10px;
+      color: #f59e0b;
+      background: rgba(245,158,11,0.12);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 4px;
+      padding: 1px 6px;
+      white-space: nowrap;
     }
 
-    .btn-danger-solid {
-      background: var(--accent2);
-      color: #fff;
-      border: none;
+    .save-bar {
+      position: sticky;
+      bottom: 24px;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card);
+      border: 1px solid rgba(108,99,255,0.3);
+      border-radius: 12px;
+      padding: 14px 20px;
+      margin-top: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity 0.2s, transform 0.2s;
     }
-    .btn-danger-solid:hover { background: #e85555; }
+
+    .save-bar.visible {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    .rename-confirm-list {
+      text-align: left;
+      max-height: 260px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin: 12px 0 16px;
+      background: var(--surface);
+    }
+
+    .rename-confirm-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    .rename-confirm-item:last-child { border-bottom: none; }
+
+    .lbl-stats-mini {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .lbl-stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .lbl-stat-card .val { font-size: 26px; font-weight: 800; }
+    .lbl-stat-card .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 3px; }
   </style>
 </head>
 <body>
@@ -447,16 +532,19 @@
   </div>
   <nav>
     <div class="nav-section">Menu</div>
-    <div class="nav-item active" onclick="showPage('dataset')">
+    <div class="nav-item active" data-page="dataset" onclick="showPage('dataset')">
       <span class="icon">📋</span> Dataset
     </div>
-    <div class="nav-item" onclick="showPage('train')">
+    <div class="nav-item" data-page="labels" onclick="showPage('labels')">
+      <span class="icon">🏷️</span> Label
+    </div>
+    <div class="nav-item" data-page="train" onclick="showPage('train')">
       <span class="icon">⚡</span> Latih Model
     </div>
-    <div class="nav-item" onclick="showPage('predict')">
+    <div class="nav-item" data-page="predict" onclick="showPage('predict')">
       <span class="icon">🔮</span> Prediksi
     </div>
-    <div class="nav-item" onclick="showPage('stats')">
+    <div class="nav-item" data-page="stats" onclick="showPage('stats')">
       <span class="icon">📊</span> Statistik
     </div>
   </nav>
@@ -469,7 +557,7 @@
 <!-- Main -->
 <main id="main">
 
-  <!-- PAGE: DATASET -->
+  <!-- ══════════════ PAGE: DATASET ══════════════ -->
   <div id="page-dataset" class="page active">
     <div class="page-header">
       <div>
@@ -479,7 +567,6 @@
       <button class="btn btn-primary" onclick="openAddModal()">+ Tambah Data</button>
     </div>
 
-    <!-- Stats row -->
     <div class="stat-grid" id="dataset-stats-row">
       <div class="stat-card purple">
         <div class="stat-label">Total Data</div>
@@ -503,7 +590,6 @@
       </div>
     </div>
 
-    <!-- Toolbar -->
     <div class="toolbar">
       <input type="text" id="search-input" placeholder="🔍 Cari teks atau label..." oninput="onSearch()" />
       <select id="label-filter" onchange="onSearch()">
@@ -515,9 +601,7 @@
         <option value="50">50 / halaman</option>
         <option value="100">100 / halaman</option>
       </select>
-      <button class="btn btn-danger" id="reset-filter-btn" onclick="resetFilter()" title="Reset semua filter ke default">
-        ✕ Reset Filter
-      </button>
+      <button class="btn btn-danger" id="reset-filter-btn" onclick="resetFilter()">✕ Reset Filter</button>
     </div>
 
     <div class="table-container">
@@ -538,7 +622,65 @@
     <div id="pagination" class="pagination"></div>
   </div>
 
-  <!-- PAGE: TRAIN -->
+  <!-- ══════════════ PAGE: LABELS ══════════════ -->
+  <div id="page-labels" class="page">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Kelola <span>Label</span></div>
+        <div class="page-sub">Perbaiki typo dan standarisasi nama label intent</div>
+      </div>
+    </div>
+
+    <!-- Mini stats -->
+    <div class="lbl-stats-mini" id="lbl-stats-mini">
+      <div class="lbl-stat-card">
+        <div class="val" id="lbl-stat-total">—</div>
+        <div class="lbl">Total Label</div>
+      </div>
+      <div class="lbl-stat-card">
+        <div class="val" id="lbl-stat-data">—</div>
+        <div class="lbl">Total Data</div>
+      </div>
+      <div class="lbl-stat-card">
+        <div class="val" id="lbl-stat-avg">—</div>
+        <div class="lbl">Rata-rata / Label</div>
+      </div>
+    </div>
+
+    <!-- Info banner -->
+    <div class="label-info-banner">
+      💡 <strong style="color:var(--text);">Cara kerja:</strong>
+      Setiap label ditampilkan sekali (distinct). Isi kolom <em style="color:var(--text);">Label Baru</em> untuk memperbaiki typo atau menyeragamkan nama.
+      Kosongkan jika tidak ingin diubah. Jika label baru sudah ada, data akan <strong style="color:#f59e0b;">digabung</strong> otomatis.
+      Klik <strong style="color:var(--accent3);">Simpan Perubahan</strong> pada bar bawah untuk menerapkan semua sekaligus.
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <input type="text" id="label-search-input" placeholder="🔍 Cari label..." oninput="filterLabelRows()" style="max-width:300px;" />
+      <span id="label-count-info" style="font-size:13px; color:var(--muted); padding-left:4px;"></span>
+      <button class="btn btn-ghost btn-sm" onclick="clearAllPending()" id="clear-pending-btn" style="display:none; margin-left:auto;">✕ Batalkan Semua</button>
+    </div>
+
+    <!-- Labels list -->
+    <div id="labels-container">
+      <div class="empty-state"><div class="spinner"></div></div>
+    </div>
+
+    <!-- Sticky save bar -->
+    <div class="save-bar" id="save-bar">
+      <div style="font-size:13px;">
+        <span id="save-bar-count" style="font-weight:800; color:var(--accent);"></span>
+        <span style="color:var(--muted); margin-left:6px;">perubahan menunggu untuk disimpan</span>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="clearAllPending()">Batalkan</button>
+        <button class="btn btn-primary" onclick="saveAllRenames()">💾 Simpan Perubahan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ PAGE: TRAIN ══════════════ -->
   <div id="page-train" class="page">
     <div class="page-header">
       <div>
@@ -553,28 +695,20 @@
           <div style="font-size:14px; font-weight:700; margin-bottom:14px;">Status Model</div>
           <div id="model-status-card" style="font-size:13px; color:var(--muted);">Memeriksa...</div>
         </div>
-
         <div class="card">
           <div style="font-size:14px; font-weight:700; margin-bottom:6px;">Konfigurasi Training</div>
           <div style="font-size:12px; color:var(--muted); margin-bottom:16px;">Algoritma: TF-IDF + Logistic Regression</div>
           <div style="margin-bottom:14px;">
             <label>Algoritma Vektorisasi</label>
-            <select disabled>
-              <option>TF-IDF Vectorizer</option>
-            </select>
+            <select disabled><option>TF-IDF Vectorizer</option></select>
           </div>
           <div style="margin-bottom:18px;">
             <label>Algoritma Klasifikasi</label>
-            <select disabled>
-              <option>Logistic Regression</option>
-            </select>
+            <select disabled><option>Logistic Regression</option></select>
           </div>
-          <button class="btn btn-primary" id="train-btn" onclick="trainModel()" style="width:100%;">
-            ⚡ Mulai Training
-          </button>
+          <button class="btn btn-primary" id="train-btn" onclick="trainModel()" style="width:100%;">⚡ Mulai Training</button>
         </div>
       </div>
-
       <div>
         <div class="card">
           <div style="font-size:14px; font-weight:700; margin-bottom:12px;">📋 Log Training</div>
@@ -584,7 +718,7 @@
     </div>
   </div>
 
-  <!-- PAGE: PREDICT -->
+  <!-- ══════════════ PAGE: PREDICT ══════════════ -->
   <div id="page-predict" class="page">
     <div class="page-header">
       <div>
@@ -592,14 +726,12 @@
         <div class="page-sub">Tes model intent dengan teks bebas</div>
       </div>
     </div>
-
     <div style="max-width:640px;">
       <div class="card">
         <label>Masukkan Teks</label>
         <textarea id="predict-text" rows="3" placeholder="" style="resize:vertical; margin-bottom:12px;"></textarea>
         <button class="btn btn-primary" onclick="predict()" id="predict-btn">🔮 Prediksi Intent</button>
       </div>
-
       <div class="predict-result" id="predict-result" style="display:none;">
         <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px;">Hasil Prediksi</div>
         <div style="font-size:13px; color:var(--muted);">Teks: <span id="result-text" style="color:var(--text);"></span></div>
@@ -617,7 +749,7 @@
     </div>
   </div>
 
-  <!-- PAGE: STATS -->
+  <!-- ══════════════ PAGE: STATS ══════════════ -->
   <div id="page-stats" class="page">
     <div class="page-header">
       <div>
@@ -625,7 +757,6 @@
         <div class="page-sub">Distribusi label dan ringkasan data</div>
       </div>
     </div>
-
     <div style="display:grid; grid-template-columns:1fr 2fr; gap:20px;">
       <div class="card">
         <div style="font-size:14px; font-weight:700; margin-bottom:16px;">Ringkasan</div>
@@ -640,7 +771,7 @@
 
 </main>
 
-<!-- Modal: Add / Edit -->
+<!-- ══ Modal: Add / Edit Dataset ══ -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
   <div class="modal">
     <div class="modal-title" id="modal-title">Tambah Data</div>
@@ -661,10 +792,7 @@
   </div>
 </div>
 
-<!-- Toast container -->
-<div id="toast-container"></div>
-
-<!-- Modal: Confirm Delete -->
+<!-- ══ Modal: Confirm Delete Dataset Row ══ -->
 <div class="confirm-overlay" id="confirm-overlay" onclick="closeConfirmOutside(event)">
   <div class="confirm-modal">
     <div class="confirm-icon">🗑️</div>
@@ -680,6 +808,41 @@
   </div>
 </div>
 
+<!-- ══ Modal: Confirm Rename Labels ══ -->
+<div class="confirm-overlay" id="confirm-rename-overlay" onclick="closeRenameConfirmOutside(event)">
+  <div class="confirm-modal" style="max-width:500px; text-align:left;">
+    <div style="text-align:center;">
+      <div class="confirm-icon" style="background:rgba(108,99,255,0.1); border-color:rgba(108,99,255,0.3);">✏️</div>
+      <div class="confirm-title">Konfirmasi Perubahan Label</div>
+    </div>
+    <div style="font-size:13px; color:var(--muted); margin-bottom:8px;">Perubahan yang akan diterapkan ke <strong style="color:var(--text);">dataset.json</strong>:</div>
+    <div class="rename-confirm-list" id="rename-confirm-list"></div>
+    <div style="font-size:12px; color:var(--muted); margin-bottom:20px; text-align:center;">
+      ⚠️ Perubahan langsung diterapkan ke file dataset. Pastikan sudah benar sebelum menyimpan.
+    </div>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" onclick="closeRenameConfirm()">Batal</button>
+      <button class="btn btn-primary" onclick="executeRenames()" id="execute-rename-btn">✓ Ya, Simpan Semua</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Modal: Confirm Delete Label ══ -->
+<div class="confirm-overlay" id="confirm-del-label-overlay" onclick="closeDelLabelOutside(event)">
+  <div class="confirm-modal">
+    <div class="confirm-icon">🗑️</div>
+    <div class="confirm-title">Hapus Label?</div>
+    <div class="confirm-desc" id="confirm-del-label-desc"></div>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" onclick="closeDelLabel()">Batal</button>
+      <button class="btn btn-danger-solid" onclick="executeDeleteLabel()">Ya, Hapus Semua</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast-container"></div>
+
 <script>
   const API = '';
   let currentPage = 1;
@@ -689,23 +852,20 @@
   let allLabels = [];
   let editingNomor = null;
 
-  // ── Navigation ──────────────────────────────────────────
+  // ══ Navigation ══════════════════════════════════════════
   function showPage(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => {
-      if (n.textContent.trim().toLowerCase().includes(name === 'dataset' ? 'dataset' : name === 'train' ? 'latih' : name === 'predict' ? 'prediksi' : 'statistik')) {
-        n.classList.add('active');
-      }
-    });
+    document.querySelector(`.nav-item[data-page="${name}"]`)?.classList.add('active');
 
     if (name === 'dataset') loadDataset();
-    if (name === 'train') { loadModelStatus(); }
+    if (name === 'labels') { pendingRenames = {}; loadLabelsPage(); }
+    if (name === 'train') loadModelStatus();
     if (name === 'stats') loadStats();
   }
 
-  // ── Toast ────────────────────────────────────────────────
+  // ══ Toast ════════════════════════════════════════════════
   function toast(msg, type = 'info') {
     const icons = { success: '✅', error: '❌', info: 'ℹ️' };
     const el = document.createElement('div');
@@ -715,10 +875,14 @@
     setTimeout(() => {
       el.style.animation = 'fadeOut 0.3s forwards';
       setTimeout(() => el.remove(), 300);
-    }, 3000);
+    }, 3200);
   }
 
-  // ── Load Labels ──────────────────────────────────────────
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ══ Load Labels (for dataset page datalist) ══════════════
   async function loadLabels() {
     const res = await fetch(`${API}/api/dataset/labels`);
     allLabels = await res.json();
@@ -726,28 +890,38 @@
     const saved = filter.value;
     filter.innerHTML = '<option value="">Semua Label</option>' + allLabels.map(l => `<option value="${l}">${l}</option>`).join('');
     filter.value = saved;
-
     const datalist = document.getElementById('label-suggestions');
     datalist.innerHTML = allLabels.map(l => `<option value="${l}">`).join('');
   }
 
-  // ── Dataset ──────────────────────────────────────────────
+  // ══ Dataset Page ════════════════════════════════════════
   async function loadDataset() {
-    await loadLabels();
-    const params = new URLSearchParams({ page: currentPage, per_page: perPage });
-    if (searchQuery) params.append('search', searchQuery);
-    if (labelFilter) params.append('label', labelFilter);
+    try {
+      await loadLabels();
+      const params = new URLSearchParams({ page: currentPage, per_page: perPage });
+      if (searchQuery) params.append('search', searchQuery);
+      if (labelFilter) params.append('label', labelFilter);
 
-    const res = await fetch(`${API}/api/dataset?${params}`);
-    const json = await res.json();
+      const res = await fetch(`${API}/api/dataset?${params}`);
+      if (!res.ok) throw new Error(`Server error: ${res.status}`);
+      const json = await res.json();
 
-    document.getElementById('stat-total').textContent = json.total;
-    document.getElementById('stat-filtered').textContent = json.total;
-    document.getElementById('stat-labels').textContent = allLabels.length;
-    document.getElementById('stat-page').textContent = `${json.page}/${json.total_pages}`;
+      document.getElementById('stat-total').textContent = json.total;
+      document.getElementById('stat-filtered').textContent = json.total;
+      document.getElementById('stat-labels').textContent = allLabels.length;
+      document.getElementById('stat-page').textContent = `${json.page}/${json.total_pages}`;
 
-    renderTable(json.data);
-    renderPagination(json.page, json.total_pages);
+      renderTable(json.data);
+      renderPagination(json.page, json.total_pages);
+    } catch(e) {
+      document.getElementById('dataset-tbody').innerHTML =
+        `<tr><td colspan="4"><div class="empty-state">
+          <div class="icon">⚠️</div>
+          <h3>Gagal memuat data</h3>
+          <p>${escHtml(e.message)}</p>
+          <p style="margin-top:8px; font-size:12px;">Pastikan Flask server sudah berjalan di <code>python app.py</code></p>
+        </div></td></tr>`;
+    }
   }
 
   function renderTable(rows) {
@@ -762,7 +936,7 @@
         <td style="max-width:420px; word-break:break-word;">${escHtml(r.texts)}</td>
         <td><span class="label-badge">${escHtml(r.label)}</span></td>
         <td style="text-align:center;">
-          <button class="btn btn-ghost btn-sm" onclick="openEditModal(${r.nomor}, ${JSON.stringify(r.texts).replace(/"/g, '&quot;')}, '${r.label}')">✏️</button>
+          <button class="btn btn-ghost btn-sm" onclick="openEditModal(${r.nomor}, ${JSON.stringify(r.texts).replace(/"/g, '&quot;')}, '${escHtml(r.label)}')">✏️</button>
           <button class="btn btn-danger btn-sm" onclick="deleteItem(${r.nomor})" style="margin-left:4px;">🗑️</button>
         </td>
       </tr>
@@ -774,13 +948,10 @@
     if (total <= 1) { pg.innerHTML = ''; return; }
     let html = '';
     html += `<button class="pg-btn" onclick="goPage(${page-1})" ${page===1?'disabled':''}>‹</button>`;
-
     const range = [];
     for (let i = Math.max(1, page-2); i <= Math.min(total, page+2); i++) range.push(i);
     if (range[0] > 1) { html += `<button class="pg-btn" onclick="goPage(1)">1</button>`; if (range[0] > 2) html += `<span class="pg-btn" style="pointer-events:none">…</span>`; }
-    range.forEach(i => {
-      html += `<button class="pg-btn ${i===page?'active':''}" onclick="goPage(${i})">${i}</button>`;
-    });
+    range.forEach(i => { html += `<button class="pg-btn ${i===page?'active':''}" onclick="goPage(${i})">${i}</button>`; });
     if (range[range.length-1] < total) {
       if (range[range.length-1] < total-1) html += `<span class="pg-btn" style="pointer-events:none">…</span>`;
       html += `<button class="pg-btn" onclick="goPage(${total})">${total}</button>`;
@@ -794,11 +965,7 @@
   function updateResetBtn() {
     const btn = document.getElementById('reset-filter-btn');
     const hasFilter = document.getElementById('search-input').value !== '' || document.getElementById('label-filter').value !== '';
-    if (hasFilter) {
-      btn.classList.add('visible');
-    } else {
-      btn.classList.remove('visible');
-    }
+    btn.classList.toggle('visible', hasFilter);
   }
 
   function onSearch() {
@@ -813,19 +980,15 @@
     document.getElementById('search-input').value = '';
     document.getElementById('label-filter').value = '';
     document.getElementById('per-page-select').value = '20';
-    searchQuery = '';
-    labelFilter = '';
-    perPage = 20;
-    currentPage = 1;
+    searchQuery = ''; labelFilter = ''; perPage = 20; currentPage = 1;
     updateResetBtn();
     loadDataset();
     toast('Filter berhasil direset', 'info');
   }
 
   function onPerPageChange() { perPage = parseInt(document.getElementById('per-page-select').value); currentPage = 1; loadDataset(); }
-  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-  // ── CRUD ─────────────────────────────────────────────────
+  // ══ CRUD ════════════════════════════════════════════════
   function openAddModal() {
     editingNomor = null;
     document.getElementById('modal-title').textContent = 'Tambah Data';
@@ -852,10 +1015,8 @@
     const texts = document.getElementById('modal-texts').value.trim();
     const label = document.getElementById('modal-label').value.trim();
     if (!texts || !label) { toast('Teks dan label wajib diisi', 'error'); return; }
-
     const btn = document.getElementById('modal-save-btn');
     btn.disabled = true;
-
     try {
       if (editingNomor) {
         const res = await fetch(`${API}/api/dataset/${editingNomor}`, {
@@ -872,13 +1033,9 @@
         if (!res.ok) throw new Error('Gagal tambah');
         toast('Data berhasil ditambahkan', 'success');
       }
-      closeModal();
-      loadDataset();
-    } catch(e) {
-      toast(e.message, 'error');
-    } finally {
-      btn.disabled = false;
-    }
+      closeModal(); loadDataset();
+    } catch(e) { toast(e.message, 'error'); }
+    finally { btn.disabled = false; }
   }
 
   let pendingDeleteNomor = null;
@@ -889,14 +1046,8 @@
     document.getElementById('confirm-overlay').classList.add('open');
   }
 
-  function closeConfirm() {
-    pendingDeleteNomor = null;
-    document.getElementById('confirm-overlay').classList.remove('open');
-  }
-
-  function closeConfirmOutside(e) {
-    if (e.target === document.getElementById('confirm-overlay')) closeConfirm();
-  }
+  function closeConfirm() { pendingDeleteNomor = null; document.getElementById('confirm-overlay').classList.remove('open'); }
+  function closeConfirmOutside(e) { if (e.target === document.getElementById('confirm-overlay')) closeConfirm(); }
 
   async function confirmDelete() {
     if (!pendingDeleteNomor) return;
@@ -907,7 +1058,248 @@
     else { toast('Gagal menghapus data', 'error'); }
   }
 
-  // ── Training ─────────────────────────────────────────────
+  // ══════════════════════════════════════════════════════════
+  // ══ LABEL PAGE ════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════
+
+  let labelsData = [];       // [{ label: string, count: number }]
+  let pendingRenames = {};   // { old_label: new_label }
+  let pendingDelLabel = null;
+
+  async function loadLabelsPage() {
+    document.getElementById('labels-container').innerHTML =
+      '<div class="empty-state"><div class="spinner"></div></div>';
+
+    const res = await fetch(`${API}/api/labels`);
+    labelsData = await res.json();
+
+    // Update mini stats
+    const totalData = labelsData.reduce((s, l) => s + l.count, 0);
+    document.getElementById('lbl-stat-total').textContent = labelsData.length;
+    document.getElementById('lbl-stat-data').textContent = totalData;
+    document.getElementById('lbl-stat-avg').textContent = labelsData.length
+      ? Math.round(totalData / labelsData.length) : 0;
+
+    updateLabelCountInfo();
+    renderLabelsPage();
+  }
+
+  function updateLabelCountInfo() {
+    const q = (document.getElementById('label-search-input')?.value || '').toLowerCase();
+    const filtered = labelsData.filter(l => l.label.toLowerCase().includes(q));
+    document.getElementById('label-count-info').textContent =
+      q ? `${filtered.length} dari ${labelsData.length} label` : `${labelsData.length} label`;
+  }
+
+  function renderLabelsPage() {
+    const q = (document.getElementById('label-search-input')?.value || '').toLowerCase();
+    const filtered = labelsData.filter(l => l.label.toLowerCase().includes(q));
+
+    updateLabelCountInfo();
+    updateSaveBar();
+
+    if (!filtered.length) {
+      document.getElementById('labels-container').innerHTML =
+        `<div class="empty-state"><div class="icon">🏷️</div><h3>Label tidak ditemukan</h3><p>Coba ubah kata kunci pencarian</p></div>`;
+      return;
+    }
+
+    const labelSet = new Set(labelsData.map(l => l.label));
+
+    const rows = filtered.map(item => {
+      const pending = pendingRenames[item.label];
+      const isDirty = pending !== undefined && pending !== '' && pending !== item.label;
+      const willMerge = isDirty && labelSet.has(pending) && pending !== item.label;
+
+      return `
+        <div class="rename-row ${isDirty ? 'is-dirty' : ''}" data-label="${escHtml(item.label)}">
+          <div class="lbl-info">
+            <div class="lbl-name">
+              <span class="label-badge">${escHtml(item.label)}</span>
+              ${isDirty ? `<span class="pending-arrow">→ ${escHtml(pending)}</span>` : ''}
+              ${willMerge ? `<span class="merge-badge">⚡ akan digabung</span>` : ''}
+            </div>
+            <div class="lbl-count">${item.count} data</div>
+          </div>
+          <div class="arrow-col">→</div>
+          <div class="input-col">
+            <input
+              type="text"
+              list="label-suggestions"
+              placeholder="Label baru (kosongkan jika tidak diubah)..."
+              value="${escHtml(pending || '')}"
+              oninput="onRenameInput('${escHtml(item.label)}', this.value)"
+              onblur="onRenameBlur('${escHtml(item.label)}', this.value)"
+            />
+          </div>
+          <div class="action-col">
+            <button class="btn btn-danger btn-sm" title="Hapus semua data dengan label ini"
+              onclick="askDeleteLabel('${escHtml(item.label)}', ${item.count})">🗑️</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    document.getElementById('labels-container').innerHTML = rows;
+  }
+
+  function onRenameInput(oldLabel, newValue) {
+    const trimmed = newValue.trim();
+    if (!trimmed || trimmed === oldLabel) {
+      delete pendingRenames[oldLabel];
+    } else {
+      pendingRenames[oldLabel] = trimmed;
+    }
+    updateSaveBar();
+
+    // Refresh only the badges/indicators in this row without re-rendering everything
+    const labelSet = new Set(labelsData.map(l => l.label));
+    const isDirty = trimmed && trimmed !== oldLabel;
+    const willMerge = isDirty && labelSet.has(trimmed);
+
+    const row = document.querySelector(`.rename-row[data-label="${CSS.escape(oldLabel)}"]`);
+    if (row) {
+      row.classList.toggle('is-dirty', !!isDirty);
+      const nameDiv = row.querySelector('.lbl-name');
+      const badge = nameDiv.querySelector('.label-badge').outerHTML;
+      nameDiv.innerHTML = badge
+        + (isDirty ? `<span class="pending-arrow">→ ${escHtml(trimmed)}</span>` : '')
+        + (willMerge ? `<span class="merge-badge">⚡ akan digabung</span>` : '');
+    }
+  }
+
+  function onRenameBlur(oldLabel, newValue) {
+    const trimmed = newValue.trim();
+    if (!trimmed || trimmed === oldLabel) {
+      delete pendingRenames[oldLabel];
+    } else {
+      pendingRenames[oldLabel] = trimmed;
+    }
+    updateSaveBar();
+  }
+
+  function filterLabelRows() {
+    renderLabelsPage();
+  }
+
+  function updateSaveBar() {
+    const changes = Object.entries(pendingRenames).filter(([o, n]) => n && n !== o);
+    const bar = document.getElementById('save-bar');
+    const clearBtn = document.getElementById('clear-pending-btn');
+    if (changes.length > 0) {
+      bar.classList.add('visible');
+      clearBtn.style.display = 'inline-flex';
+      document.getElementById('save-bar-count').textContent = changes.length;
+    } else {
+      bar.classList.remove('visible');
+      clearBtn.style.display = 'none';
+    }
+  }
+
+  function clearAllPending() {
+    pendingRenames = {};
+    renderLabelsPage();
+    updateSaveBar();
+    toast('Semua perubahan dibatalkan', 'info');
+  }
+
+  function saveAllRenames() {
+    const changes = Object.entries(pendingRenames).filter(([o, n]) => n && n !== o);
+    if (!changes.length) { toast('Tidak ada perubahan untuk disimpan', 'info'); return; }
+
+    const labelSet = new Set(labelsData.map(l => l.label));
+
+    const listHtml = changes.map(([o, n]) => {
+      const item = labelsData.find(l => l.label === o);
+      const count = item ? item.count : '?';
+      const willMerge = labelSet.has(n) && n !== o;
+      return `
+        <div class="rename-confirm-item">
+          <span class="label-badge" style="font-size:10px; flex-shrink:0;">${escHtml(o)}</span>
+          <span style="color:var(--muted); flex-shrink:0;">→</span>
+          <span style="color:var(--accent3); font-weight:700; flex:1;">${escHtml(n)}</span>
+          <span style="color:var(--muted); font-size:11px; white-space:nowrap;">${count} data</span>
+          ${willMerge ? `<span class="merge-badge">digabung</span>` : ''}
+        </div>
+      `;
+    }).join('');
+
+    document.getElementById('rename-confirm-list').innerHTML = listHtml;
+    document.getElementById('confirm-rename-overlay').classList.add('open');
+  }
+
+  function closeRenameConfirm() { document.getElementById('confirm-rename-overlay').classList.remove('open'); }
+  function closeRenameConfirmOutside(e) { if (e.target === document.getElementById('confirm-rename-overlay')) closeRenameConfirm(); }
+
+  async function executeRenames() {
+    const changes = Object.entries(pendingRenames).filter(([o, n]) => n && n !== o);
+    const btn = document.getElementById('execute-rename-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+
+    let successCount = 0;
+    const errors = [];
+
+    for (const [oldLabel, newLabel] of changes) {
+      try {
+        const res = await fetch(`${API}/api/labels/rename`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ old_label: oldLabel, new_label: newLabel })
+        });
+        const json = await res.json();
+        if (!res.ok) errors.push(`${oldLabel}: ${json.error}`);
+        else successCount++;
+      } catch(e) {
+        errors.push(`${oldLabel}: ${e.message}`);
+      }
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '✓ Ya, Simpan Semua';
+    closeRenameConfirm();
+    pendingRenames = {};
+
+    if (successCount > 0) toast(`${successCount} label berhasil diperbarui`, 'success');
+    errors.forEach(e => toast(e, 'error'));
+
+    loadLabelsPage();
+  }
+
+  // ── Delete Label ─────────────────────────────────────────
+  function askDeleteLabel(label, count) {
+    pendingDelLabel = label;
+    document.getElementById('confirm-del-label-desc').innerHTML =
+      `Anda akan menghapus label <strong style="color:var(--accent2); font-family:'Space Mono',monospace;">${escHtml(label)}</strong>
+       beserta seluruh <strong>${count} data</strong> yang menggunakannya.<br><br>
+       Tindakan ini <strong>tidak dapat dibatalkan</strong>.`;
+    document.getElementById('confirm-del-label-overlay').classList.add('open');
+  }
+
+  function closeDelLabel() {
+    pendingDelLabel = null;
+    document.getElementById('confirm-del-label-overlay').classList.remove('open');
+  }
+
+  function closeDelLabelOutside(e) {
+    if (e.target === document.getElementById('confirm-del-label-overlay')) closeDelLabel();
+  }
+
+  async function executeDeleteLabel() {
+    if (!pendingDelLabel) return;
+    const label = pendingDelLabel;
+    closeDelLabel();
+    const res = await fetch(`${API}/api/labels/delete`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ label })
+    });
+    const json = await res.json();
+    if (res.ok) { toast(json.message, 'success'); loadLabelsPage(); }
+    else { toast(json.error, 'error'); }
+  }
+
+  // ══ Training ════════════════════════════════════════════
   async function loadModelStatus() {
     const res = await fetch(`${API}/api/model/status`);
     const json = await res.json();
@@ -920,10 +1312,8 @@
       card.innerHTML = `
         <div style="margin-bottom:10px;"><span class="status-dot online"></span> Model tersedia</div>
         <div style="font-size:12px; color:var(--muted); line-height:1.8;">
-          📁 intent_model.pkl<br>
-          📁 vectorizer.pkl<br>
-          💾 Total ukuran: ${size} KB<br>
-          🕐 Dilatih: ${date}
+          📁 intent_model.pkl<br>📁 vectorizer.pkl<br>
+          💾 Total ukuran: ${size} KB<br>🕐 Dilatih: ${date}
         </div>`;
       sidebar.innerHTML = `<span class="status-dot online"></span><span style="color:var(--accent3); font-size:12px;">Model siap</span>`;
     } else {
@@ -938,14 +1328,11 @@
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Melatih Model...';
     log.textContent = '[INFO] Memulai proses training...\n';
-
     try {
       log.textContent += '[INFO] Membaca dataset...\n';
       const res = await fetch(`${API}/api/train`, { method: 'POST' });
       const json = await res.json();
-
       if (!res.ok) throw new Error(json.error || 'Training gagal');
-
       log.textContent += `[OK] Dataset dimuat: ${json.total_data} data\n`;
       log.textContent += `[OK] Total kelas: ${json.total_labels}\n`;
       log.textContent += `[OK] Label: ${json.labels.join(', ')}\n`;
@@ -965,15 +1352,13 @@
     }
   }
 
-  // ── Predict ───────────────────────────────────────────────
+  // ══ Predict ═════════════════════════════════════════════
   async function predict() {
     const text = document.getElementById('predict-text').value.trim();
     if (!text) { toast('Masukkan teks terlebih dahulu', 'error'); return; }
-
     const btn = document.getElementById('predict-btn');
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Memproses...';
-
     try {
       const res = await fetch(`${API}/api/predict`, {
         method: 'POST', headers: {'Content-Type':'application/json'},
@@ -981,42 +1366,35 @@
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-
       document.getElementById('result-text').textContent = json.text;
       document.getElementById('result-intent').textContent = json.intent;
       document.getElementById('result-confidence').textContent = `${json.confidence}%`;
       document.getElementById('confidence-fill').style.width = `${json.confidence}%`;
       document.getElementById('predict-result').style.display = 'block';
-    } catch(e) {
-      toast(e.message, 'error');
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = '🔮 Prediksi Intent';
-    }
+    } catch(e) { toast(e.message, 'error'); }
+    finally { btn.disabled = false; btn.innerHTML = '🔮 Prediksi Intent'; }
   }
 
   document.getElementById('predict-text').addEventListener('keydown', e => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); predict(); }
   });
 
-  // ── Stats ─────────────────────────────────────────────────
+  // ══ Stats ════════════════════════════════════════════════
   async function loadStats() {
     const res = await fetch(`${API}/api/dataset/stats`);
     const json = await res.json();
-
     document.getElementById('stats-summary').innerHTML = `
       <div style="line-height:2.2; font-size:14px;">
         <div>📦 <strong style="color:var(--text);">${json.total}</strong> total data</div>
         <div>🏷️ <strong style="color:var(--text);">${json.total_labels}</strong> label unik</div>
         <div>📊 <strong style="color:var(--text);">${Math.round(json.total/json.total_labels)}</strong> rata-rata per label</div>
       </div>`;
-
     const sorted = Object.entries(json.label_counts).sort((a,b) => b[1]-a[1]);
     const max = sorted[0][1];
     document.getElementById('label-distribution').innerHTML = sorted.map(([label, count]) => `
       <div class="label-bar">
         <div class="label-bar-header">
-          <span style="color:var(--text); font-weight:600; font-size:12px;">${label}</span>
+          <span style="color:var(--text); font-weight:600; font-size:12px;">${escHtml(label)}</span>
           <span style="color:var(--muted); font-size:12px;">${count}</span>
         </div>
         <div class="label-bar-track">
@@ -1026,7 +1404,7 @@
     `).join('');
   }
 
-  // ── Init ──────────────────────────────────────────────────
+  // ══ Init ═════════════════════════════════════════════════
   loadDataset();
   loadModelStatus();
 </script>

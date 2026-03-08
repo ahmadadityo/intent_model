@@ -129,6 +129,77 @@ def delete_item(nomor):
     return jsonify({"message": "Data berhasil dihapus"})
 
 
+# ─── Label Management ───────────────────────────────────────────
+
+@app.route("/api/labels", methods=["GET"])
+def get_labels_detail():
+    """Return all unique labels with their counts, sorted alphabetically."""
+    data = load_dataset()
+    label_counts = {}
+    for d in data:
+        label_counts[d["label"]] = label_counts.get(d["label"], 0) + 1
+    result = [
+        {"label": label, "count": count}
+        for label, count in sorted(label_counts.items())
+    ]
+    return jsonify(result)
+
+
+@app.route("/api/labels/rename", methods=["PUT"])
+def rename_label():
+    """Rename all occurrences of old_label to new_label in the dataset."""
+    body = request.json
+    old_label = body.get("old_label", "").strip()
+    new_label = body.get("new_label", "").strip()
+
+    if not old_label or not new_label:
+        return jsonify({"error": "old_label dan new_label wajib diisi"}), 400
+    if old_label == new_label:
+        return jsonify({"error": "Label baru sama dengan label lama"}), 400
+
+    data = load_dataset()
+    updated_count = 0
+    for item in data:
+        if item["label"] == old_label:
+            item["label"] = new_label
+            updated_count += 1
+
+    if updated_count == 0:
+        return jsonify({"error": f"Label '{old_label}' tidak ditemukan"}), 404
+
+    save_dataset(data)
+    return jsonify({
+        "message": f"Label '{old_label}' berhasil diubah menjadi '{new_label}'",
+        "updated_count": updated_count,
+        "old_label": old_label,
+        "new_label": new_label
+    })
+
+
+@app.route("/api/labels/delete", methods=["DELETE"])
+def delete_label():
+    """Delete all dataset entries with the given label."""
+    body = request.json
+    label = body.get("label", "").strip()
+
+    if not label:
+        return jsonify({"error": "label wajib diisi"}), 400
+
+    data = load_dataset()
+    new_data = [d for d in data if d["label"] != label]
+    deleted_count = len(data) - len(new_data)
+
+    if deleted_count == 0:
+        return jsonify({"error": f"Label '{label}' tidak ditemukan"}), 404
+
+    save_dataset(new_data)
+    return jsonify({
+        "message": f"Label '{label}' dan {deleted_count} data berhasil dihapus",
+        "deleted_count": deleted_count,
+        "label": label
+    })
+
+
 # ─── Model Training ──────────────────────────────────────────────
 
 @app.route("/api/train", methods=["POST"])
