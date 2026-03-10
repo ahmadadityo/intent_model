@@ -17,6 +17,7 @@
       --accent3: #43e97b;
       --text: #e8e8f0;
       --muted: #7a7a99;
+      --warn: #f59e0b;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,7 +35,7 @@
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-    /* Sidebar */
+    /* ── Sidebar ── */
     #sidebar {
       background: var(--surface);
       border-right: 1px solid var(--border);
@@ -60,11 +61,15 @@
     }
 
     .logo h1 { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
-    .logo p { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .logo p  { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
     nav { padding: 16px 12px; flex: 1; }
 
-    .nav-section { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 0 8px 8px; margin-top: 12px; }
+    .nav-section {
+      font-size: 10px; font-weight: 700; color: var(--muted);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0 8px 8px; margin-top: 12px;
+    }
 
     .nav-item {
       display: flex; align-items: center; gap: 10px;
@@ -75,10 +80,10 @@
     }
 
     .nav-item:hover { background: var(--card); color: var(--text); }
-    .nav-item.active { background: rgba(108, 99, 255, 0.15); color: var(--accent); }
+    .nav-item.active { background: rgba(108,99,255,0.15); color: var(--accent); }
     .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
 
-    /* Main content */
+    /* ── Main ── */
     #main { margin-left: 240px; padding: 32px; min-height: 100vh; }
 
     .page-header {
@@ -88,7 +93,7 @@
 
     .page-title { font-size: 26px; font-weight: 800; }
     .page-title span { color: var(--accent); }
-    .page-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .page-sub  { font-size: 13px; color: var(--muted); margin-top: 2px; }
 
     .card {
       background: var(--card);
@@ -97,438 +102,311 @@
       padding: 20px;
     }
 
-    .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 16px; margin-bottom: 24px; }
 
     .stat-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px;
-      position: relative;
-      overflow: hidden;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 18px;
+      position: relative; overflow: hidden;
     }
-
-    .stat-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 2px;
-    }
-
+    .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
     .stat-card.purple::before { background: var(--accent); }
-    .stat-card.red::before { background: var(--accent2); }
-    .stat-card.green::before { background: var(--accent3); }
-    .stat-card.blue::before { background: #38bdf8; }
+    .stat-card.red::before    { background: var(--accent2); }
+    .stat-card.green::before  { background: var(--accent3); }
+    .stat-card.blue::before   { background: #38bdf8; }
 
-    .stat-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-    .stat-value { font-size: 32px; font-weight: 800; margin: 6px 0 2px; }
-    .stat-desc { font-size: 12px; color: var(--muted); }
+    .stat-label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; }
+    .stat-value { font-size:32px; font-weight:800; margin:6px 0 2px; }
+    .stat-desc  { font-size:12px; color:var(--muted); }
 
-    .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+    .table-container { overflow-x:auto; border-radius:12px; border:1px solid var(--border); }
 
-    table { width: 100%; border-collapse: collapse; }
+    table { width:100%; border-collapse:collapse; }
     thead th {
-      background: var(--surface);
-      padding: 12px 16px;
-      text-align: left;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      border-bottom: 1px solid var(--border);
+      background: var(--surface); padding: 12px 16px;
+      text-align:left; font-size:11px; font-weight:700;
+      color:var(--muted); text-transform:uppercase; letter-spacing:0.08em;
+      border-bottom:1px solid var(--border);
     }
-
-    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: rgba(108, 99, 255, 0.04); }
-    tbody td { padding: 12px 16px; font-size: 13px; }
+    tbody tr { border-bottom:1px solid var(--border); transition:background 0.1s; }
+    tbody tr:last-child { border-bottom:none; }
+    tbody tr:hover { background:rgba(108,99,255,0.04); }
+    tbody td { padding:12px 16px; font-size:13px; }
 
     .nomor-badge {
-      background: var(--surface);
-      color: var(--muted);
-      border-radius: 6px;
-      padding: 2px 8px;
-      font-size: 11px;
-      font-family: 'Space Mono', monospace;
-      display: inline-block;
+      background:var(--surface); color:var(--muted);
+      border-radius:6px; padding:2px 8px;
+      font-size:11px; font-family:'Space Mono',monospace; display:inline-block;
     }
 
     .label-badge {
-      background: rgba(108, 99, 255, 0.12);
-      color: var(--accent);
-      border: 1px solid rgba(108, 99, 255, 0.25);
-      border-radius: 20px;
-      padding: 3px 10px;
-      font-size: 11px;
-      font-weight: 600;
-      white-space: nowrap;
+      background:rgba(108,99,255,0.12); color:var(--accent);
+      border:1px solid rgba(108,99,255,0.25);
+      border-radius:20px; padding:3px 10px;
+      font-size:11px; font-weight:600; white-space:nowrap;
     }
 
     .btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 8px 16px; border-radius: 8px;
-      font-size: 13px; font-weight: 600;
-      cursor: pointer; border: none; transition: all 0.15s;
-      font-family: 'Syne', sans-serif;
+      display:inline-flex; align-items:center; gap:6px;
+      padding:8px 16px; border-radius:8px;
+      font-size:13px; font-weight:600;
+      cursor:pointer; border:none; transition:all 0.15s;
+      font-family:'Syne',sans-serif;
     }
-
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-primary:hover { background: #5a53e0; }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-success { background: rgba(67, 233, 123, 0.12); color: var(--accent3); border: 1px solid rgba(67, 233, 123, 0.25); }
-    .btn-success:hover { background: rgba(67, 233, 123, 0.2); }
-    .btn-danger { background: rgba(255, 107, 107, 0.1); color: var(--accent2); border: 1px solid rgba(255, 107, 107, 0.2); }
-    .btn-danger:hover { background: rgba(255, 107, 107, 0.2); }
-    .btn-ghost { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
-    .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
-    .btn-sm { padding: 5px 10px; font-size: 12px; }
-
-    .btn-danger-solid { background: var(--accent2); color: #fff; border: none; }
-    .btn-danger-solid:hover { background: #e85555; }
+    .btn-primary      { background:var(--accent); color:#fff; }
+    .btn-primary:hover { background:#5a53e0; }
+    .btn-primary:disabled { opacity:0.5; cursor:not-allowed; }
+    .btn-success      { background:rgba(67,233,123,0.12); color:var(--accent3); border:1px solid rgba(67,233,123,0.25); }
+    .btn-success:hover { background:rgba(67,233,123,0.2); }
+    .btn-danger       { background:rgba(255,107,107,0.1); color:var(--accent2); border:1px solid rgba(255,107,107,0.2); }
+    .btn-danger:hover  { background:rgba(255,107,107,0.2); }
+    .btn-ghost        { background:var(--surface); color:var(--muted); border:1px solid var(--border); }
+    .btn-ghost:hover  { color:var(--text); border-color:var(--muted); }
+    .btn-sm           { padding:5px 10px; font-size:12px; }
+    .btn-danger-solid { background:var(--accent2); color:#fff; border:none; }
+    .btn-danger-solid:hover { background:#e85555; }
+    .btn-warn         { background:rgba(245,158,11,0.15); color:var(--warn); border:1px solid rgba(245,158,11,0.3); }
+    .btn-warn:hover   { background:rgba(245,158,11,0.25); }
 
     input, textarea, select {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 14px;
-      color: var(--text);
-      font-size: 13px;
-      font-family: 'Syne', sans-serif;
-      width: 100%;
-      transition: border 0.15s;
-      outline: none;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:8px; padding:10px 14px;
+      color:var(--text); font-size:13px;
+      font-family:'Syne',sans-serif; width:100%;
+      transition:border 0.15s; outline:none;
+    }
+    input:focus, textarea:focus, select:focus { border-color:var(--accent); }
+    input::placeholder { color:var(--muted); }
+
+    label {
+      font-size:12px; font-weight:700; color:var(--muted);
+      display:block; margin-bottom:6px;
+      text-transform:uppercase; letter-spacing:0.06em;
     }
 
-    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
-    input::placeholder { color: var(--muted); }
-
-    label { font-size: 12px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
-
-    .pagination { display: flex; align-items: center; gap: 6px; justify-content: center; margin-top: 20px; }
-
+    .pagination { display:flex; align-items:center; gap:6px; justify-content:center; margin-top:20px; }
     .pg-btn {
-      width: 34px; height: 34px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 13px; font-weight: 600;
-      background: var(--surface); border: 1px solid var(--border);
-      color: var(--muted); transition: all 0.1s;
+      width:34px; height:34px; border-radius:8px;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; font-size:13px; font-weight:600;
+      background:var(--surface); border:1px solid var(--border);
+      color:var(--muted); transition:all 0.1s;
     }
-
-    .pg-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .pg-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .pg-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+    .pg-btn:hover  { border-color:var(--accent); color:var(--accent); }
+    .pg-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .pg-btn:disabled { opacity:0.3; cursor:default; pointer-events:none; }
 
     .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.7); backdrop-filter:blur(4px);
+      z-index:1000; display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none; transition:opacity 0.2s;
     }
-
-    .modal-overlay.open { opacity: 1; pointer-events: all; }
-
+    .modal-overlay.open { opacity:1; pointer-events:all; }
     .modal {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px;
-      width: 100%;
-      max-width: 520px;
-      transform: translateY(20px);
-      transition: transform 0.2s;
+      background:var(--card); border:1px solid var(--border);
+      border-radius:16px; padding:28px; width:100%; max-width:520px;
+      transform:translateY(20px); transition:transform 0.2s;
     }
+    .modal-overlay.open .modal { transform:translateY(0); }
+    .modal-title { font-size:18px; font-weight:800; margin-bottom:20px; }
 
-    .modal-overlay.open .modal { transform: translateY(0); }
-    .modal-title { font-size: 18px; font-weight: 800; margin-bottom: 20px; }
-
-    #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-
+    #toast-container {
+      position:fixed; bottom:24px; right:24px; z-index:9999;
+      display:flex; flex-direction:column; gap:10px;
+    }
     .toast {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 18px;
-      font-size: 13px;
-      font-weight: 600;
-      min-width: 250px;
-      animation: slideIn 0.25s ease;
-      display: flex; align-items: center; gap: 10px;
+      background:var(--card); border:1px solid var(--border);
+      border-radius:10px; padding:14px 18px;
+      font-size:13px; font-weight:600; min-width:250px;
+      animation:slideIn 0.25s ease;
+      display:flex; align-items:center; gap:10px;
     }
+    .toast.success { border-left:3px solid var(--accent3); }
+    .toast.error   { border-left:3px solid var(--accent2); }
+    .toast.info    { border-left:3px solid var(--accent); }
 
-    .toast.success { border-left: 3px solid var(--accent3); }
-    .toast.error { border-left: 3px solid var(--accent2); }
-    .toast.info { border-left: 3px solid var(--accent); }
+    @keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+    @keyframes fadeOut { to { opacity:0; transform:translateX(100%); } }
 
-    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
+    .toolbar { display:flex; gap:10px; margin-bottom:16px; align-items:center; flex-wrap:wrap; }
+    .toolbar input  { max-width:280px; }
+    .toolbar select { max-width:220px; }
 
-    .toolbar { display: flex; gap: 10px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
-    .toolbar input { max-width: 280px; }
-    .toolbar select { max-width: 220px; }
-
-    .train-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .train-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
 
     .log-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-      font-family: 'Space Mono', monospace;
-      font-size: 12px;
-      color: var(--accent3);
-      min-height: 120px;
-      max-height: 260px;
-      overflow-y: auto;
-      white-space: pre-wrap;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:10px; padding:14px;
+      font-family:'Space Mono',monospace; font-size:12px;
+      color:var(--accent3); min-height:120px; max-height:260px;
+      overflow-y:auto; white-space:pre-wrap;
     }
 
     .status-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      display: inline-block; margin-right: 6px;
+      width:8px; height:8px; border-radius:50%;
+      display:inline-block; margin-right:6px;
     }
+    .status-dot.online  { background:var(--accent3); box-shadow:0 0 6px var(--accent3); }
+    .status-dot.offline { background:var(--accent2); }
+    .status-dot.warn    { background:var(--warn);    box-shadow:0 0 6px var(--warn); }
 
-    .status-dot.online { background: var(--accent3); box-shadow: 0 0 6px var(--accent3); }
-    .status-dot.offline { background: var(--accent2); }
-
-    .page { display: none; }
-    .page.active { display: block; }
+    .page { display:none; }
+    .page.active { display:block; }
 
     .predict-result {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      margin-top: 16px;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:12px; padding:20px; margin-top:16px;
     }
-
     .intent-tag {
-      background: rgba(108, 99, 255, 0.15);
-      color: var(--accent);
-      border: 1px solid rgba(108, 99, 255, 0.3);
-      border-radius: 8px;
-      padding: 6px 14px;
-      font-size: 14px;
-      font-weight: 700;
-      display: inline-block;
-      margin-top: 8px;
+      background:rgba(108,99,255,0.15); color:var(--accent);
+      border:1px solid rgba(108,99,255,0.3);
+      border-radius:8px; padding:6px 14px;
+      font-size:14px; font-weight:700; display:inline-block; margin-top:8px;
     }
-
-    .confidence-bar {
-      height: 6px;
-      background: var(--border);
-      border-radius: 3px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-
+    .confidence-bar { height:6px; background:var(--border); border-radius:3px; overflow:hidden; margin-top:10px; }
     .confidence-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--accent3));
-      border-radius: 3px;
-      transition: width 0.5s ease;
+      height:100%;
+      background:linear-gradient(90deg, var(--accent), var(--accent3));
+      border-radius:3px; transition:width 0.5s ease;
     }
 
-    .label-bar { margin-bottom: 10px; }
-    .label-bar-header { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
-    .label-bar-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
-    .label-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+    .label-bar { margin-bottom:10px; }
+    .label-bar-header { display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; }
+    .label-bar-track  { height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
+    .label-bar-fill   { height:100%; background:var(--accent); border-radius:3px; }
 
     .spinner {
-      width: 16px; height: 16px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-      display: inline-block;
+      width:16px; height:16px;
+      border:2px solid rgba(255,255,255,0.3); border-top-color:#fff;
+      border-radius:50%; animation:spin 0.6s linear infinite; display:inline-block;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spin { to { transform:rotate(360deg); } }
 
-    .empty-state {
-      text-align: center; padding: 60px 20px; color: var(--muted);
-    }
-    .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
-    .empty-state h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
-    .empty-state p { font-size: 13px; }
+    .empty-state { text-align:center; padding:60px 20px; color:var(--muted); }
+    .empty-state .icon { font-size:48px; margin-bottom:12px; }
+    .empty-state h3 { font-size:16px; font-weight:700; margin-bottom:6px; color:var(--text); }
+    .empty-state p  { font-size:13px; }
 
-    #reset-filter-btn { display: none; }
-    #reset-filter-btn.visible { display: inline-flex; }
+    #reset-filter-btn         { display:none; }
+    #reset-filter-btn.visible { display:inline-flex; }
 
     .confirm-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(4px);
-      z-index: 2000;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.75); backdrop-filter:blur(4px);
+      z-index:2000; display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none; transition:opacity 0.2s;
     }
-    .confirm-overlay.open { opacity: 1; pointer-events: all; }
-
+    .confirm-overlay.open { opacity:1; pointer-events:all; }
     .confirm-modal {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px 28px 24px;
-      width: 100%;
-      max-width: 420px;
-      transform: translateY(16px) scale(0.98);
-      transition: transform 0.2s;
-      text-align: center;
+      background:var(--card); border:1px solid var(--border);
+      border-radius:16px; padding:28px 28px 24px; width:100%; max-width:420px;
+      transform:translateY(16px) scale(0.98); transition:transform 0.2s;
+      text-align:center;
     }
-    .confirm-overlay.open .confirm-modal { transform: translateY(0) scale(1); }
-
+    .confirm-overlay.open .confirm-modal { transform:translateY(0) scale(1); }
     .confirm-icon {
-      width: 56px; height: 56px;
-      background: rgba(255, 107, 107, 0.1);
-      border: 1px solid rgba(255, 107, 107, 0.25);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px;
-      margin: 0 auto 16px;
+      width:56px; height:56px;
+      background:rgba(255,107,107,0.1); border:1px solid rgba(255,107,107,0.25);
+      border-radius:50%; display:flex; align-items:center; justify-content:center;
+      font-size:24px; margin:0 auto 16px;
     }
+    .confirm-title   { font-size:17px; font-weight:800; margin-bottom:8px; color:var(--text); }
+    .confirm-desc    { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:24px; }
+    .confirm-desc strong { color:var(--accent2); font-family:'Space Mono',monospace; }
+    .confirm-actions { display:flex; gap:10px; justify-content:center; }
+    .confirm-actions .btn { flex:1; justify-content:center; }
 
-    .confirm-title { font-size: 17px; font-weight: 800; margin-bottom: 8px; color: var(--text); }
-    .confirm-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
-    .confirm-desc strong { color: var(--accent2); font-family: 'Space Mono', monospace; }
-    .confirm-actions { display: flex; gap: 10px; justify-content: center; }
-    .confirm-actions .btn { flex: 1; justify-content: center; }
-
-    /* ── Label Page Styles ── */
+    /* ── Label Page ── */
     .label-info-banner {
-      background: rgba(108,99,255,0.07);
-      border: 1px solid rgba(108,99,255,0.18);
-      border-radius: 12px;
-      padding: 14px 18px;
-      margin-bottom: 22px;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.7;
+      background:rgba(108,99,255,0.07); border:1px solid rgba(108,99,255,0.18);
+      border-radius:12px; padding:14px 18px; margin-bottom:22px;
+      font-size:13px; color:var(--muted); line-height:1.7;
     }
-
     .rename-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 13px 16px;
-      margin-bottom: 8px;
-      transition: border-color 0.15s, background 0.15s;
+      display:flex; align-items:center; gap:12px;
+      background:var(--card); border:1px solid var(--border);
+      border-radius:10px; padding:13px 16px; margin-bottom:8px;
+      transition:border-color 0.15s, background 0.15s;
     }
-
-    .rename-row:hover { border-color: rgba(108,99,255,0.4); background: rgba(108,99,255,0.03); }
-    .rename-row.is-dirty { border-color: rgba(108,99,255,0.5); background: rgba(108,99,255,0.05); }
-
-    .rename-row .lbl-info { flex: 0 0 auto; min-width: 0; width: 260px; }
-    .rename-row .lbl-name { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .rename-row .lbl-count { font-size: 11px; color: var(--muted); margin-top: 3px; }
-
-    .rename-row .arrow-col {
-      color: var(--muted);
-      font-size: 16px;
-      flex: 0 0 auto;
-    }
-
-    .rename-row .input-col { flex: 1; min-width: 0; }
-    .rename-row .input-col input { width: 100%; }
-
-    .rename-row .action-col { flex: 0 0 auto; }
-
-    .pending-arrow {
-      font-size: 11px;
-      color: var(--accent);
-      font-weight: 700;
-      background: rgba(108,99,255,0.12);
-      border-radius: 4px;
-      padding: 2px 7px;
-      white-space: nowrap;
-    }
-
-    .merge-badge {
-      font-size: 10px;
-      color: #f59e0b;
-      background: rgba(245,158,11,0.12);
-      border: 1px solid rgba(245,158,11,0.25);
-      border-radius: 4px;
-      padding: 1px 6px;
-      white-space: nowrap;
-    }
+    .rename-row:hover    { border-color:rgba(108,99,255,0.4); background:rgba(108,99,255,0.03); }
+    .rename-row.is-dirty { border-color:rgba(108,99,255,0.5); background:rgba(108,99,255,0.05); }
+    .rename-row .lbl-info  { flex:0 0 auto; min-width:0; width:260px; }
+    .rename-row .lbl-name  { font-size:13px; font-weight:700; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .rename-row .lbl-count { font-size:11px; color:var(--muted); margin-top:3px; }
+    .rename-row .arrow-col { color:var(--muted); font-size:16px; flex:0 0 auto; }
+    .rename-row .input-col { flex:1; min-width:0; }
+    .rename-row .input-col input { width:100%; }
+    .rename-row .action-col { flex:0 0 auto; }
+    .pending-arrow { font-size:11px; color:var(--accent); font-weight:700; background:rgba(108,99,255,0.12); border-radius:4px; padding:2px 7px; white-space:nowrap; }
+    .merge-badge   { font-size:10px; color:#f59e0b; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.25); border-radius:4px; padding:1px 6px; white-space:nowrap; }
 
     .save-bar {
-      position: sticky;
-      bottom: 24px;
-      z-index: 50;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--card);
-      border: 1px solid rgba(108,99,255,0.3);
-      border-radius: 12px;
-      padding: 14px 20px;
-      margin-top: 20px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(12px);
-      transition: opacity 0.2s, transform 0.2s;
+      position:sticky; bottom:24px; z-index:50;
+      display:flex; align-items:center; justify-content:space-between;
+      background:var(--card); border:1px solid rgba(108,99,255,0.3);
+      border-radius:12px; padding:14px 20px; margin-top:20px;
+      box-shadow:0 8px 32px rgba(0,0,0,0.5);
+      opacity:0; pointer-events:none; transform:translateY(12px);
+      transition:opacity 0.2s, transform 0.2s;
     }
-
-    .save-bar.visible {
-      opacity: 1;
-      pointer-events: all;
-      transform: translateY(0);
-    }
+    .save-bar.visible { opacity:1; pointer-events:all; transform:translateY(0); }
 
     .rename-confirm-list {
-      text-align: left;
-      max-height: 260px;
-      overflow-y: auto;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 12px;
-      margin: 12px 0 16px;
-      background: var(--surface);
+      text-align:left; max-height:260px; overflow-y:auto;
+      border:1px solid var(--border); border-radius:8px;
+      padding:10px 12px; margin:12px 0 16px; background:var(--surface);
     }
-
     .rename-confirm-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 12px;
+      display:flex; align-items:center; gap:8px;
+      padding:7px 0; border-bottom:1px solid var(--border); font-size:12px;
+    }
+    .rename-confirm-item:last-child { border-bottom:none; }
+
+    .lbl-stats-mini { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px; }
+    .lbl-stat-card  { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px; text-align:center; }
+    .lbl-stat-card .val { font-size:26px; font-weight:800; }
+    .lbl-stat-card .lbl { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.07em; margin-top:3px; }
+
+    /* ── Retrain Warning ── */
+    .retrain-banner {
+      display:flex; align-items:flex-start; gap:14px;
+      background:rgba(245,158,11,0.08);
+      border:1px solid rgba(245,158,11,0.35);
+      border-radius:12px; padding:16px 18px; margin-bottom:20px;
+      animation:pulseBorder 2.5s ease-in-out infinite;
+    }
+    .retrain-banner .rb-icon { font-size:22px; flex-shrink:0; margin-top:1px; }
+    .retrain-banner .rb-title { font-size:14px; font-weight:800; color:var(--warn); margin-bottom:4px; }
+    .retrain-banner .rb-desc  { font-size:12px; color:rgba(245,158,11,0.75); line-height:1.6; }
+    @keyframes pulseBorder {
+      0%,100% { border-color:rgba(245,158,11,0.35); box-shadow:none; }
+      50%      { border-color:rgba(245,158,11,0.65); box-shadow:0 0 16px rgba(245,158,11,0.12); }
     }
 
-    .rename-confirm-item:last-child { border-bottom: none; }
-
-    .lbl-stats-mini {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 24px;
+    /* Sidebar retrain pill */
+    .sb-retrain-pill {
+      display:flex; align-items:center; gap:6px;
+      background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.28);
+      border-radius:7px; padding:6px 10px; margin-top:8px;
+      font-size:11px; font-weight:700; color:var(--warn);
+      cursor:pointer; transition:background 0.15s;
+      line-height:1.3;
     }
-
-    .lbl-stat-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-      text-align: center;
-    }
-
-    .lbl-stat-card .val { font-size: 26px; font-weight: 800; }
-    .lbl-stat-card .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 3px; }
+    .sb-retrain-pill:hover { background:rgba(245,158,11,0.2); }
+    .sb-retrain-pill .pill-icon { font-size:13px; flex-shrink:0; }
   </style>
 </head>
 <body>
 
-<!-- Sidebar -->
+<!-- ══════════════════════════════════════════════
+     SIDEBAR
+═══════════════════════════════════════════════ -->
 <aside id="sidebar">
   <div class="logo">
     <div class="logo-mark">🧠</div>
     <h1>Intent Manager</h1>
-    <p>ML Dataset & Model Tool</p>
+    <p>ML Dataset &amp; Model Tool</p>
   </div>
   <nav>
     <div class="nav-section">Menu</div>
@@ -548,16 +426,20 @@
       <span class="icon">📊</span> Statistik
     </div>
   </nav>
+
+  <!-- Sidebar model status -->
   <div style="padding:16px 20px; border-top:1px solid var(--border); font-size:11px; color:var(--muted);">
-    <div style="margin-bottom:6px; font-weight:700;">Model Status</div>
+    <div style="margin-bottom:6px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em;">Model Status</div>
     <div id="sidebar-model-status">Memeriksa...</div>
   </div>
 </aside>
 
-<!-- Main -->
+<!-- ══════════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════════ -->
 <main id="main">
 
-  <!-- ══════════════ PAGE: DATASET ══════════════ -->
+  <!-- ════════════ PAGE: DATASET ════════════ -->
   <div id="page-dataset" class="page active">
     <div class="page-header">
       <div>
@@ -567,7 +449,7 @@
       <button class="btn btn-primary" onclick="openAddModal()">+ Tambah Data</button>
     </div>
 
-    <div class="stat-grid" id="dataset-stats-row">
+    <div class="stat-grid">
       <div class="stat-card purple">
         <div class="stat-label">Total Data</div>
         <div class="stat-value" id="stat-total">—</div>
@@ -622,7 +504,7 @@
     <div id="pagination" class="pagination"></div>
   </div>
 
-  <!-- ══════════════ PAGE: LABELS ══════════════ -->
+  <!-- ════════════ PAGE: LABELS ════════════ -->
   <div id="page-labels" class="page">
     <div class="page-header">
       <div>
@@ -631,8 +513,7 @@
       </div>
     </div>
 
-    <!-- Mini stats -->
-    <div class="lbl-stats-mini" id="lbl-stats-mini">
+    <div class="lbl-stats-mini">
       <div class="lbl-stat-card">
         <div class="val" id="lbl-stat-total">—</div>
         <div class="lbl">Total Label</div>
@@ -647,7 +528,6 @@
       </div>
     </div>
 
-    <!-- Info banner -->
     <div class="label-info-banner">
       💡 <strong style="color:var(--text);">Cara kerja:</strong>
       Setiap label ditampilkan sekali (distinct). Isi kolom <em style="color:var(--text);">Label Baru</em> untuk memperbaiki typo atau menyeragamkan nama.
@@ -655,19 +535,16 @@
       Klik <strong style="color:var(--accent3);">Simpan Perubahan</strong> pada bar bawah untuk menerapkan semua sekaligus.
     </div>
 
-    <!-- Toolbar -->
     <div class="toolbar">
       <input type="text" id="label-search-input" placeholder="🔍 Cari label..." oninput="filterLabelRows()" style="max-width:300px;" />
       <span id="label-count-info" style="font-size:13px; color:var(--muted); padding-left:4px;"></span>
       <button class="btn btn-ghost btn-sm" onclick="clearAllPending()" id="clear-pending-btn" style="display:none; margin-left:auto;">✕ Batalkan Semua</button>
     </div>
 
-    <!-- Labels list -->
     <div id="labels-container">
       <div class="empty-state"><div class="spinner"></div></div>
     </div>
 
-    <!-- Sticky save bar -->
     <div class="save-bar" id="save-bar">
       <div style="font-size:13px;">
         <span id="save-bar-count" style="font-weight:800; color:var(--accent);"></span>
@@ -680,12 +557,26 @@
     </div>
   </div>
 
-  <!-- ══════════════ PAGE: TRAIN ══════════════ -->
+  <!-- ════════════ PAGE: TRAIN ════════════ -->
   <div id="page-train" class="page">
     <div class="page-header">
       <div>
         <div class="page-title">Latih <span>Model</span></div>
         <div class="page-sub">Buat model intent dan vectorizer dari dataset</div>
+      </div>
+    </div>
+
+    <!-- Retrain warning banner (ditampilkan kondisional) -->
+    <div id="retrain-banner" style="display:none;">
+      <div class="retrain-banner">
+        <div class="rb-icon">⚠️</div>
+        <div>
+          <div class="rb-title">Dataset telah berubah — Model perlu dilatih ulang</div>
+          <div class="rb-desc">
+            Ada penambahan, perubahan, atau penghapusan data sejak training terakhir.<br>
+            Latih ulang model agar hasil prediksi tetap akurat dan sesuai dataset terkini.
+          </div>
+        </div>
       </div>
     </div>
 
@@ -718,7 +609,7 @@
     </div>
   </div>
 
-  <!-- ══════════════ PAGE: PREDICT ══════════════ -->
+  <!-- ════════════ PAGE: PREDICT ════════════ -->
   <div id="page-predict" class="page">
     <div class="page-header">
       <div>
@@ -749,7 +640,7 @@
     </div>
   </div>
 
-  <!-- ══════════════ PAGE: STATS ══════════════ -->
+  <!-- ════════════ PAGE: STATS ════════════ -->
   <div id="page-stats" class="page">
     <div class="page-header">
       <div>
@@ -815,7 +706,9 @@
       <div class="confirm-icon" style="background:rgba(108,99,255,0.1); border-color:rgba(108,99,255,0.3);">✏️</div>
       <div class="confirm-title">Konfirmasi Perubahan Label</div>
     </div>
-    <div style="font-size:13px; color:var(--muted); margin-bottom:8px;">Perubahan yang akan diterapkan ke <strong style="color:var(--text);">dataset.json</strong>:</div>
+    <div style="font-size:13px; color:var(--muted); margin-bottom:8px;">
+      Perubahan yang akan diterapkan ke <strong style="color:var(--text);">dataset.json</strong>:
+    </div>
     <div class="rename-confirm-list" id="rename-confirm-list"></div>
     <div style="font-size:12px; color:var(--muted); margin-bottom:20px; text-align:center;">
       ⚠️ Perubahan langsung diterapkan ke file dataset. Pastikan sudah benar sebelum menyimpan.
@@ -843,16 +736,20 @@
 <!-- Toast -->
 <div id="toast-container"></div>
 
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════ -->
 <script>
   const API = '';
-  let currentPage = 1;
-  let perPage = 20;
-  let searchQuery = '';
-  let labelFilter = '';
-  let allLabels = [];
+
+  let currentPage  = 1;
+  let perPage      = 20;
+  let searchQuery  = '';
+  let labelFilter  = '';
+  let allLabels    = [];
   let editingNomor = null;
 
-  // ══ Navigation ══════════════════════════════════════════
+  // ══ Navigation ══════════════════════════════════════════════════
   function showPage(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -860,12 +757,12 @@
     document.querySelector(`.nav-item[data-page="${name}"]`)?.classList.add('active');
 
     if (name === 'dataset') loadDataset();
-    if (name === 'labels') { pendingRenames = {}; loadLabelsPage(); }
-    if (name === 'train') loadModelStatus();
-    if (name === 'stats') loadStats();
+    if (name === 'labels')  { pendingRenames = {}; loadLabelsPage(); }
+    if (name === 'train')   loadModelStatus();
+    if (name === 'stats')   loadStats();
   }
 
-  // ══ Toast ════════════════════════════════════════════════
+  // ══ Toast ════════════════════════════════════════════════════════
   function toast(msg, type = 'info') {
     const icons = { success: '✅', error: '❌', info: 'ℹ️' };
     const el = document.createElement('div');
@@ -879,22 +776,27 @@
   }
 
   function escHtml(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  // ══ Load Labels (for dataset page datalist) ══════════════
+  // ══ Load Labels (for dataset page datalist) ═══════════════════
   async function loadLabels() {
     const res = await fetch(`${API}/api/dataset/labels`);
-    allLabels = await res.json();
+    allLabels  = await res.json();
+
     const filter = document.getElementById('label-filter');
-    const saved = filter.value;
-    filter.innerHTML = '<option value="">Semua Label</option>' + allLabels.map(l => `<option value="${l}">${l}</option>`).join('');
+    const saved  = filter.value;
+    filter.innerHTML = '<option value="">Semua Label</option>'
+      + allLabels.map(l => `<option value="${l}">${l}</option>`).join('');
     filter.value = saved;
-    const datalist = document.getElementById('label-suggestions');
-    datalist.innerHTML = allLabels.map(l => `<option value="${l}">`).join('');
+
+    document.getElementById('label-suggestions').innerHTML =
+      allLabels.map(l => `<option value="${l}">`).join('');
   }
 
-  // ══ Dataset Page ════════════════════════════════════════
+  // ══ Dataset Page ═════════════════════════════════════════════════
   async function loadDataset() {
     try {
       await loadLabels();
@@ -906,16 +808,16 @@
       if (!res.ok) throw new Error(`Server error: ${res.status}`);
       const json = await res.json();
 
-      document.getElementById('stat-total').textContent = json.total;
+      document.getElementById('stat-total').textContent    = json.total;
       document.getElementById('stat-filtered').textContent = json.total;
-      document.getElementById('stat-labels').textContent = allLabels.length;
-      document.getElementById('stat-page').textContent = `${json.page}/${json.total_pages}`;
+      document.getElementById('stat-labels').textContent   = allLabels.length;
+      document.getElementById('stat-page').textContent     = `${json.page}/${json.total_pages}`;
 
       renderTable(json.data);
       renderPagination(json.page, json.total_pages);
     } catch(e) {
-      document.getElementById('dataset-tbody').innerHTML =
-        `<tr><td colspan="4"><div class="empty-state">
+      document.getElementById('dataset-tbody').innerHTML = `
+        <tr><td colspan="4"><div class="empty-state">
           <div class="icon">⚠️</div>
           <h3>Gagal memuat data</h3>
           <p>${escHtml(e.message)}</p>
@@ -927,7 +829,12 @@
   function renderTable(rows) {
     const tbody = document.getElementById('dataset-tbody');
     if (!rows.length) {
-      tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="icon">🔍</div><h3>Data tidak ditemukan</h3><p>Coba ubah filter atau kata kunci pencarian</p></div></td></tr>`;
+      tbody.innerHTML = `
+        <tr><td colspan="4"><div class="empty-state">
+          <div class="icon">🔍</div>
+          <h3>Data tidak ditemukan</h3>
+          <p>Coba ubah filter atau kata kunci pencarian</p>
+        </div></td></tr>`;
       return;
     }
     tbody.innerHTML = rows.map(r => `
@@ -936,7 +843,8 @@
         <td style="max-width:420px; word-break:break-word;">${escHtml(r.texts)}</td>
         <td><span class="label-badge">${escHtml(r.label)}</span></td>
         <td style="text-align:center;">
-          <button class="btn btn-ghost btn-sm" onclick="openEditModal(${r.nomor}, ${JSON.stringify(r.texts).replace(/"/g, '&quot;')}, '${escHtml(r.label)}')">✏️</button>
+          <button class="btn btn-ghost btn-sm"
+            onclick="openEditModal(${r.nomor}, ${JSON.stringify(r.texts).replace(/"/g,'&quot;')}, '${escHtml(r.label)}')">✏️</button>
           <button class="btn btn-danger btn-sm" onclick="deleteItem(${r.nomor})" style="margin-left:4px;">🗑️</button>
         </td>
       </tr>
@@ -950,8 +858,13 @@
     html += `<button class="pg-btn" onclick="goPage(${page-1})" ${page===1?'disabled':''}>‹</button>`;
     const range = [];
     for (let i = Math.max(1, page-2); i <= Math.min(total, page+2); i++) range.push(i);
-    if (range[0] > 1) { html += `<button class="pg-btn" onclick="goPage(1)">1</button>`; if (range[0] > 2) html += `<span class="pg-btn" style="pointer-events:none">…</span>`; }
-    range.forEach(i => { html += `<button class="pg-btn ${i===page?'active':''}" onclick="goPage(${i})">${i}</button>`; });
+    if (range[0] > 1) {
+      html += `<button class="pg-btn" onclick="goPage(1)">1</button>`;
+      if (range[0] > 2) html += `<span class="pg-btn" style="pointer-events:none">…</span>`;
+    }
+    range.forEach(i => {
+      html += `<button class="pg-btn ${i===page?'active':''}" onclick="goPage(${i})">${i}</button>`;
+    });
     if (range[range.length-1] < total) {
       if (range[range.length-1] < total-1) html += `<span class="pg-btn" style="pointer-events:none">…</span>`;
       html += `<button class="pg-btn" onclick="goPage(${total})">${total}</button>`;
@@ -963,22 +876,22 @@
   function goPage(p) { currentPage = p; loadDataset(); }
 
   function updateResetBtn() {
-    const btn = document.getElementById('reset-filter-btn');
-    const hasFilter = document.getElementById('search-input').value !== '' || document.getElementById('label-filter').value !== '';
-    btn.classList.toggle('visible', hasFilter);
+    const hasFilter = document.getElementById('search-input').value !== ''
+                   || document.getElementById('label-filter').value !== '';
+    document.getElementById('reset-filter-btn').classList.toggle('visible', hasFilter);
   }
 
   function onSearch() {
-    currentPage = 1;
-    searchQuery = document.getElementById('search-input').value;
-    labelFilter = document.getElementById('label-filter').value;
+    currentPage  = 1;
+    searchQuery  = document.getElementById('search-input').value;
+    labelFilter  = document.getElementById('label-filter').value;
     updateResetBtn();
     loadDataset();
   }
 
   function resetFilter() {
-    document.getElementById('search-input').value = '';
-    document.getElementById('label-filter').value = '';
+    document.getElementById('search-input').value    = '';
+    document.getElementById('label-filter').value    = '';
     document.getElementById('per-page-select').value = '20';
     searchQuery = ''; labelFilter = ''; perPage = 20; currentPage = 1;
     updateResetBtn();
@@ -986,14 +899,18 @@
     toast('Filter berhasil direset', 'info');
   }
 
-  function onPerPageChange() { perPage = parseInt(document.getElementById('per-page-select').value); currentPage = 1; loadDataset(); }
+  function onPerPageChange() {
+    perPage = parseInt(document.getElementById('per-page-select').value);
+    currentPage = 1;
+    loadDataset();
+  }
 
-  // ══ CRUD ════════════════════════════════════════════════
+  // ══ CRUD ══════════════════════════════════════════════════════════
   function openAddModal() {
     editingNomor = null;
-    document.getElementById('modal-title').textContent = 'Tambah Data';
-    document.getElementById('modal-texts').value = '';
-    document.getElementById('modal-label').value = '';
+    document.getElementById('modal-title').textContent    = 'Tambah Data';
+    document.getElementById('modal-texts').value          = '';
+    document.getElementById('modal-label').value          = '';
     document.getElementById('modal-save-btn').textContent = 'Simpan';
     document.getElementById('modal-overlay').classList.add('open');
     document.getElementById('modal-texts').focus();
@@ -1001,20 +918,21 @@
 
   function openEditModal(nomor, texts, label) {
     editingNomor = nomor;
-    document.getElementById('modal-title').textContent = `Edit Data #${nomor}`;
-    document.getElementById('modal-texts').value = texts;
-    document.getElementById('modal-label').value = label;
+    document.getElementById('modal-title').textContent    = `Edit Data #${nomor}`;
+    document.getElementById('modal-texts').value          = texts;
+    document.getElementById('modal-label').value          = label;
     document.getElementById('modal-save-btn').textContent = 'Update';
     document.getElementById('modal-overlay').classList.add('open');
   }
 
-  function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
-  function closeModalOutside(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
+  function closeModal()              { document.getElementById('modal-overlay').classList.remove('open'); }
+  function closeModalOutside(e)      { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
 
   async function saveModal() {
     const texts = document.getElementById('modal-texts').value.trim();
     const label = document.getElementById('modal-label').value.trim();
     if (!texts || !label) { toast('Teks dan label wajib diisi', 'error'); return; }
+
     const btn = document.getElementById('modal-save-btn');
     btn.disabled = true;
     try {
@@ -1033,9 +951,14 @@
         if (!res.ok) throw new Error('Gagal tambah');
         toast('Data berhasil ditambahkan', 'success');
       }
-      closeModal(); loadDataset();
-    } catch(e) { toast(e.message, 'error'); }
-    finally { btn.disabled = false; }
+      closeModal();
+      loadDataset();
+      loadModelStatus();   // ← perbarui status model setelah data berubah
+    } catch(e) {
+      toast(e.message, 'error');
+    } finally {
+      btn.disabled = false;
+    }
   }
 
   let pendingDeleteNomor = null;
@@ -1046,38 +969,42 @@
     document.getElementById('confirm-overlay').classList.add('open');
   }
 
-  function closeConfirm() { pendingDeleteNomor = null; document.getElementById('confirm-overlay').classList.remove('open'); }
-  function closeConfirmOutside(e) { if (e.target === document.getElementById('confirm-overlay')) closeConfirm(); }
+  function closeConfirm()            { pendingDeleteNomor = null; document.getElementById('confirm-overlay').classList.remove('open'); }
+  function closeConfirmOutside(e)    { if (e.target === document.getElementById('confirm-overlay')) closeConfirm(); }
 
   async function confirmDelete() {
     if (!pendingDeleteNomor) return;
     const nomor = pendingDeleteNomor;
     closeConfirm();
     const res = await fetch(`${API}/api/dataset/${nomor}`, { method: 'DELETE' });
-    if (res.ok) { toast('Data berhasil dihapus', 'success'); loadDataset(); }
-    else { toast('Gagal menghapus data', 'error'); }
+    if (res.ok) {
+      toast('Data berhasil dihapus', 'success');
+      loadDataset();
+      loadModelStatus();   // ← perbarui status model setelah data dihapus
+    } else {
+      toast('Gagal menghapus data', 'error');
+    }
   }
 
-  // ══════════════════════════════════════════════════════════
-  // ══ LABEL PAGE ════════════════════════════════════════════
-  // ══════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════════
+  // ══ LABEL PAGE ═══════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════════
 
-  let labelsData = [];       // [{ label: string, count: number }]
-  let pendingRenames = {};   // { old_label: new_label }
+  let labelsData     = [];
+  let pendingRenames = {};
   let pendingDelLabel = null;
 
   async function loadLabelsPage() {
     document.getElementById('labels-container').innerHTML =
       '<div class="empty-state"><div class="spinner"></div></div>';
 
-    const res = await fetch(`${API}/api/labels`);
+    const res  = await fetch(`${API}/api/labels`);
     labelsData = await res.json();
 
-    // Update mini stats
     const totalData = labelsData.reduce((s, l) => s + l.count, 0);
     document.getElementById('lbl-stat-total').textContent = labelsData.length;
-    document.getElementById('lbl-stat-data').textContent = totalData;
-    document.getElementById('lbl-stat-avg').textContent = labelsData.length
+    document.getElementById('lbl-stat-data').textContent  = totalData;
+    document.getElementById('lbl-stat-avg').textContent   = labelsData.length
       ? Math.round(totalData / labelsData.length) : 0;
 
     updateLabelCountInfo();
@@ -1085,14 +1012,14 @@
   }
 
   function updateLabelCountInfo() {
-    const q = (document.getElementById('label-search-input')?.value || '').toLowerCase();
+    const q        = (document.getElementById('label-search-input')?.value || '').toLowerCase();
     const filtered = labelsData.filter(l => l.label.toLowerCase().includes(q));
     document.getElementById('label-count-info').textContent =
       q ? `${filtered.length} dari ${labelsData.length} label` : `${labelsData.length} label`;
   }
 
   function renderLabelsPage() {
-    const q = (document.getElementById('label-search-input')?.value || '').toLowerCase();
+    const q        = (document.getElementById('label-search-input')?.value || '').toLowerCase();
     const filtered = labelsData.filter(l => l.label.toLowerCase().includes(q));
 
     updateLabelCountInfo();
@@ -1107,8 +1034,8 @@
     const labelSet = new Set(labelsData.map(l => l.label));
 
     const rows = filtered.map(item => {
-      const pending = pendingRenames[item.label];
-      const isDirty = pending !== undefined && pending !== '' && pending !== item.label;
+      const pending   = pendingRenames[item.label];
+      const isDirty   = pending !== undefined && pending !== '' && pending !== item.label;
       const willMerge = isDirty && labelSet.has(pending) && pending !== item.label;
 
       return `
@@ -1116,16 +1043,14 @@
           <div class="lbl-info">
             <div class="lbl-name">
               <span class="label-badge">${escHtml(item.label)}</span>
-              ${isDirty ? `<span class="pending-arrow">→ ${escHtml(pending)}</span>` : ''}
+              ${isDirty   ? `<span class="pending-arrow">→ ${escHtml(pending)}</span>` : ''}
               ${willMerge ? `<span class="merge-badge">⚡ akan digabung</span>` : ''}
             </div>
             <div class="lbl-count">${item.count} data</div>
           </div>
           <div class="arrow-col">→</div>
           <div class="input-col">
-            <input
-              type="text"
-              list="label-suggestions"
+            <input type="text" list="label-suggestions"
               placeholder="Label baru (kosongkan jika tidak diubah)..."
               value="${escHtml(pending || '')}"
               oninput="onRenameInput('${escHtml(item.label)}', this.value)"
@@ -1145,46 +1070,37 @@
 
   function onRenameInput(oldLabel, newValue) {
     const trimmed = newValue.trim();
-    if (!trimmed || trimmed === oldLabel) {
-      delete pendingRenames[oldLabel];
-    } else {
-      pendingRenames[oldLabel] = trimmed;
-    }
+    if (!trimmed || trimmed === oldLabel) delete pendingRenames[oldLabel];
+    else pendingRenames[oldLabel] = trimmed;
     updateSaveBar();
 
-    // Refresh only the badges/indicators in this row without re-rendering everything
-    const labelSet = new Set(labelsData.map(l => l.label));
-    const isDirty = trimmed && trimmed !== oldLabel;
+    const labelSet  = new Set(labelsData.map(l => l.label));
+    const isDirty   = trimmed && trimmed !== oldLabel;
     const willMerge = isDirty && labelSet.has(trimmed);
 
     const row = document.querySelector(`.rename-row[data-label="${CSS.escape(oldLabel)}"]`);
     if (row) {
       row.classList.toggle('is-dirty', !!isDirty);
       const nameDiv = row.querySelector('.lbl-name');
-      const badge = nameDiv.querySelector('.label-badge').outerHTML;
+      const badge   = nameDiv.querySelector('.label-badge').outerHTML;
       nameDiv.innerHTML = badge
-        + (isDirty ? `<span class="pending-arrow">→ ${escHtml(trimmed)}</span>` : '')
+        + (isDirty   ? `<span class="pending-arrow">→ ${escHtml(trimmed)}</span>` : '')
         + (willMerge ? `<span class="merge-badge">⚡ akan digabung</span>` : '');
     }
   }
 
   function onRenameBlur(oldLabel, newValue) {
     const trimmed = newValue.trim();
-    if (!trimmed || trimmed === oldLabel) {
-      delete pendingRenames[oldLabel];
-    } else {
-      pendingRenames[oldLabel] = trimmed;
-    }
+    if (!trimmed || trimmed === oldLabel) delete pendingRenames[oldLabel];
+    else pendingRenames[oldLabel] = trimmed;
     updateSaveBar();
   }
 
-  function filterLabelRows() {
-    renderLabelsPage();
-  }
+  function filterLabelRows() { renderLabelsPage(); }
 
   function updateSaveBar() {
-    const changes = Object.entries(pendingRenames).filter(([o, n]) => n && n !== o);
-    const bar = document.getElementById('save-bar');
+    const changes  = Object.entries(pendingRenames).filter(([o, n]) => n && n !== o);
+    const bar      = document.getElementById('save-bar');
     const clearBtn = document.getElementById('clear-pending-btn');
     if (changes.length > 0) {
       bar.classList.add('visible');
@@ -1208,10 +1124,9 @@
     if (!changes.length) { toast('Tidak ada perubahan untuk disimpan', 'info'); return; }
 
     const labelSet = new Set(labelsData.map(l => l.label));
-
     const listHtml = changes.map(([o, n]) => {
-      const item = labelsData.find(l => l.label === o);
-      const count = item ? item.count : '?';
+      const item      = labelsData.find(l => l.label === o);
+      const count     = item ? item.count : '?';
       const willMerge = labelSet.has(n) && n !== o;
       return `
         <div class="rename-confirm-item">
@@ -1220,16 +1135,15 @@
           <span style="color:var(--accent3); font-weight:700; flex:1;">${escHtml(n)}</span>
           <span style="color:var(--muted); font-size:11px; white-space:nowrap;">${count} data</span>
           ${willMerge ? `<span class="merge-badge">digabung</span>` : ''}
-        </div>
-      `;
+        </div>`;
     }).join('');
 
     document.getElementById('rename-confirm-list').innerHTML = listHtml;
     document.getElementById('confirm-rename-overlay').classList.add('open');
   }
 
-  function closeRenameConfirm() { document.getElementById('confirm-rename-overlay').classList.remove('open'); }
-  function closeRenameConfirmOutside(e) { if (e.target === document.getElementById('confirm-rename-overlay')) closeRenameConfirm(); }
+  function closeRenameConfirm()           { document.getElementById('confirm-rename-overlay').classList.remove('open'); }
+  function closeRenameConfirmOutside(e)   { if (e.target === document.getElementById('confirm-rename-overlay')) closeRenameConfirm(); }
 
   async function executeRenames() {
     const changes = Object.entries(pendingRenames).filter(([o, n]) => n && n !== o);
@@ -1242,9 +1156,8 @@
 
     for (const [oldLabel, newLabel] of changes) {
       try {
-        const res = await fetch(`${API}/api/labels/rename`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+        const res  = await fetch(`${API}/api/labels/rename`, {
+          method: 'PUT', headers: {'Content-Type':'application/json'},
           body: JSON.stringify({ old_label: oldLabel, new_label: newLabel })
         });
         const json = await res.json();
@@ -1264,9 +1177,10 @@
     errors.forEach(e => toast(e, 'error'));
 
     loadLabelsPage();
+    loadModelStatus();   // ← perbarui status model setelah label diubah
   }
 
-  // ── Delete Label ─────────────────────────────────────────
+  // ── Delete Label ──────────────────────────────────────────────
   function askDeleteLabel(label, count) {
     pendingDelLabel = label;
     document.getElementById('confirm-del-label-desc').innerHTML =
@@ -1276,61 +1190,121 @@
     document.getElementById('confirm-del-label-overlay').classList.add('open');
   }
 
-  function closeDelLabel() {
-    pendingDelLabel = null;
-    document.getElementById('confirm-del-label-overlay').classList.remove('open');
-  }
-
-  function closeDelLabelOutside(e) {
-    if (e.target === document.getElementById('confirm-del-label-overlay')) closeDelLabel();
-  }
+  function closeDelLabel()           { pendingDelLabel = null; document.getElementById('confirm-del-label-overlay').classList.remove('open'); }
+  function closeDelLabelOutside(e)   { if (e.target === document.getElementById('confirm-del-label-overlay')) closeDelLabel(); }
 
   async function executeDeleteLabel() {
     if (!pendingDelLabel) return;
     const label = pendingDelLabel;
     closeDelLabel();
-    const res = await fetch(`${API}/api/labels/delete`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
+    const res  = await fetch(`${API}/api/labels/delete`, {
+      method: 'DELETE', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ label })
     });
     const json = await res.json();
-    if (res.ok) { toast(json.message, 'success'); loadLabelsPage(); }
-    else { toast(json.error, 'error'); }
-  }
-
-  // ══ Training ════════════════════════════════════════════
-  async function loadModelStatus() {
-    const res = await fetch(`${API}/api/model/status`);
-    const json = await res.json();
-    const card = document.getElementById('model-status-card');
-    const sidebar = document.getElementById('sidebar-model-status');
-
-    if (json.model_exists && json.vectorizer_exists) {
-      const size = ((json.model_size + json.vectorizer_size) / 1024).toFixed(1);
-      const date = new Date(json.model_modified * 1000).toLocaleString('id-ID');
-      card.innerHTML = `
-        <div style="margin-bottom:10px;"><span class="status-dot online"></span> Model tersedia</div>
-        <div style="font-size:12px; color:var(--muted); line-height:1.8;">
-          📁 intent_model.pkl<br>📁 vectorizer.pkl<br>
-          💾 Total ukuran: ${size} KB<br>🕐 Dilatih: ${date}
-        </div>`;
-      sidebar.innerHTML = `<span class="status-dot online"></span><span style="color:var(--accent3); font-size:12px;">Model siap</span>`;
+    if (res.ok) {
+      toast(json.message, 'success');
+      loadLabelsPage();
+      loadModelStatus();   // ← perbarui status model setelah label dihapus
     } else {
-      card.innerHTML = `<div><span class="status-dot offline"></span> Model belum tersedia</div><div style="font-size:12px;color:var(--muted);margin-top:6px;">Klik "Mulai Training" untuk membuat model.</div>`;
-      sidebar.innerHTML = `<span class="status-dot offline"></span><span style="color:var(--accent2); font-size:12px;">Belum dilatih</span>`;
+      toast(json.error, 'error');
     }
   }
 
+  // ══ Model Status ═════════════════════════════════════════════════
+  async function loadModelStatus() {
+    const res  = await fetch(`${API}/api/model/status`);
+    const json = await res.json();
+
+    const modelReady   = json.model_exists && json.vectorizer_exists;
+    const needsRetrain = json.needs_retrain;
+
+    // ── Sidebar ──────────────────────────────────────────────────
+    const sidebar = document.getElementById('sidebar-model-status');
+    if (!modelReady) {
+      sidebar.innerHTML = `
+        <span class="status-dot offline"></span>
+        <span style="color:var(--accent2); font-size:12px;">Belum dilatih</span>`;
+    } else if (needsRetrain) {
+      sidebar.innerHTML = `
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span class="status-dot warn"></span>
+          <span style="color:var(--accent3); font-size:12px;">Model siap</span>
+        </div>
+        <div class="sb-retrain-pill" onclick="showPage('train')" title="Buka halaman Latih Model">
+          <span class="pill-icon">⚠️</span>
+          <span>Perlu training ulang<br><span style="font-weight:400; font-size:10px;">Dataset telah berubah</span></span>
+        </div>`;
+    } else {
+      sidebar.innerHTML = `
+        <span class="status-dot online"></span>
+        <span style="color:var(--accent3); font-size:12px;">Model siap</span>`;
+    }
+
+    // ── Train Page: retrain banner ────────────────────────────────
+    const banner = document.getElementById('retrain-banner');
+    if (banner) banner.style.display = (modelReady && needsRetrain) ? 'block' : 'none';
+
+    // ── Train Page: status card ───────────────────────────────────
+    const card = document.getElementById('model-status-card');
+    if (!card) return;
+
+    if (!modelReady) {
+      card.innerHTML = `
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span class="status-dot offline"></span>
+          <span style="font-weight:700;">Model belum tersedia</span>
+        </div>
+        <div style="font-size:12px; color:var(--muted);">Klik "Mulai Training" untuk membuat model.</div>`;
+      return;
+    }
+
+    const size = ((json.model_size + json.vectorizer_size) / 1024).toFixed(1);
+    const date = new Date(json.model_modified * 1000).toLocaleString('id-ID');
+
+    if (needsRetrain) {
+      card.innerHTML = `
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+          <span class="status-dot warn"></span>
+          <span style="font-weight:800; color:var(--warn);">Perlu Training Ulang</span>
+        </div>
+        <div style="font-size:12px; color:var(--muted); line-height:1.9;">
+          📁 intent_model.pkl<br>
+          📁 vectorizer.pkl<br>
+          💾 Total ukuran: ${size} KB<br>
+          🕐 Terakhir dilatih: ${date}
+        </div>
+        <div style="margin-top:12px; padding:10px 12px;
+          background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25);
+          border-radius:8px; font-size:12px; color:rgba(245,158,11,0.9); line-height:1.6;">
+          📝 Dataset telah diubah setelah training terakhir.<br>
+          Klik <strong>⚡ Mulai Training</strong> untuk memperbarui model.
+        </div>`;
+    } else {
+      card.innerHTML = `
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+          <span class="status-dot online"></span>
+          <span style="font-weight:700;">Model tersedia &amp; terkini</span>
+        </div>
+        <div style="font-size:12px; color:var(--muted); line-height:1.9;">
+          📁 intent_model.pkl<br>
+          📁 vectorizer.pkl<br>
+          💾 Total ukuran: ${size} KB<br>
+          🕐 Terakhir dilatih: ${date}
+        </div>`;
+    }
+  }
+
+  // ══ Training ══════════════════════════════════════════════════════
   async function trainModel() {
     const btn = document.getElementById('train-btn');
     const log = document.getElementById('train-log');
-    btn.disabled = true;
+    btn.disabled  = true;
     btn.innerHTML = '<span class="spinner"></span> Melatih Model...';
     log.textContent = '[INFO] Memulai proses training...\n';
     try {
       log.textContent += '[INFO] Membaca dataset...\n';
-      const res = await fetch(`${API}/api/train`, { method: 'POST' });
+      const res  = await fetch(`${API}/api/train`, { method: 'POST' });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Training gagal');
       log.textContent += `[OK] Dataset dimuat: ${json.total_data} data\n`;
@@ -1347,41 +1321,45 @@
       log.textContent += `[ERROR] ${e.message}\n`;
       toast(e.message, 'error');
     } finally {
-      btn.disabled = false;
+      btn.disabled  = false;
       btn.innerHTML = '⚡ Mulai Training';
     }
   }
 
-  // ══ Predict ═════════════════════════════════════════════
+  // ══ Predict ═══════════════════════════════════════════════════════
   async function predict() {
     const text = document.getElementById('predict-text').value.trim();
     if (!text) { toast('Masukkan teks terlebih dahulu', 'error'); return; }
     const btn = document.getElementById('predict-btn');
-    btn.disabled = true;
+    btn.disabled  = true;
     btn.innerHTML = '<span class="spinner"></span> Memproses...';
     try {
-      const res = await fetch(`${API}/api/predict`, {
+      const res  = await fetch(`${API}/api/predict`, {
         method: 'POST', headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ text })
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      document.getElementById('result-text').textContent = json.text;
-      document.getElementById('result-intent').textContent = json.intent;
+      document.getElementById('result-text').textContent       = json.text;
+      document.getElementById('result-intent').textContent     = json.intent;
       document.getElementById('result-confidence').textContent = `${json.confidence}%`;
-      document.getElementById('confidence-fill').style.width = `${json.confidence}%`;
-      document.getElementById('predict-result').style.display = 'block';
-    } catch(e) { toast(e.message, 'error'); }
-    finally { btn.disabled = false; btn.innerHTML = '🔮 Prediksi Intent'; }
+      document.getElementById('confidence-fill').style.width   = `${json.confidence}%`;
+      document.getElementById('predict-result').style.display  = 'block';
+    } catch(e) {
+      toast(e.message, 'error');
+    } finally {
+      btn.disabled  = false;
+      btn.innerHTML = '🔮 Prediksi Intent';
+    }
   }
 
   document.getElementById('predict-text').addEventListener('keydown', e => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); predict(); }
   });
 
-  // ══ Stats ════════════════════════════════════════════════
+  // ══ Stats ═════════════════════════════════════════════════════════
   async function loadStats() {
-    const res = await fetch(`${API}/api/dataset/stats`);
+    const res  = await fetch(`${API}/api/dataset/stats`);
     const json = await res.json();
     document.getElementById('stats-summary').innerHTML = `
       <div style="line-height:2.2; font-size:14px;">
@@ -1390,7 +1368,7 @@
         <div>📊 <strong style="color:var(--text);">${Math.round(json.total/json.total_labels)}</strong> rata-rata per label</div>
       </div>`;
     const sorted = Object.entries(json.label_counts).sort((a,b) => b[1]-a[1]);
-    const max = sorted[0][1];
+    const max    = sorted[0][1];
     document.getElementById('label-distribution').innerHTML = sorted.map(([label, count]) => `
       <div class="label-bar">
         <div class="label-bar-header">
@@ -1404,7 +1382,7 @@
     `).join('');
   }
 
-  // ══ Init ═════════════════════════════════════════════════
+  // ══ Init ══════════════════════════════════════════════════════════
   loadDataset();
   loadModelStatus();
 </script>

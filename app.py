@@ -1,6 +1,7 @@
 import json
 import os
 import pickle
+import time
 
 from flask import Flask, jsonify, request, send_from_directory
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -19,10 +20,13 @@ def add_cors(response):
 def options_handler(p):
     return jsonify({}), 200
 
-DATASET_PATH = "dataset.json"
-MODEL_PATH = "intent_model.pkl"
-VECTORIZER_PATH = "vectorizer.pkl"
+DATASET_PATH          = "dataset.json"
+MODEL_PATH            = "intent_model.pkl"
+VECTORIZER_PATH       = "vectorizer.pkl"
+DATASET_MODIFIED_PATH = "dataset_modified.txt"   # timestamp perubahan dataset
 
+
+# ─── Helpers ─────────────────────────────────────────────────────
 
 def load_dataset():
     if not os.path.exists(DATASET_PATH):
@@ -34,16 +38,33 @@ def load_dataset():
 def save_dataset(data):
     with open(DATASET_PATH, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+    # Catat waktu dataset diubah
+    with open(DATASET_MODIFIED_PATH, "w") as f:
+        f.write(str(time.time()))
 
 
-# ─── Dataset CRUD ───────────────────────────────────────────────
+def get_dataset_modified_time():
+    """Kembalikan timestamp terakhir dataset diubah lewat API."""
+    if os.path.exists(DATASET_MODIFIED_PATH):
+        with open(DATASET_MODIFIED_PATH, "r") as f:
+            try:
+                return float(f.read().strip())
+            except ValueError:
+                pass
+    # fallback: gunakan mtime file dataset.json
+    if os.path.exists(DATASET_PATH):
+        return os.path.getmtime(DATASET_PATH)
+    return None
+
+
+# ─── Dataset CRUD ────────────────────────────────────────────────
 
 @app.route("/api/dataset", methods=["GET"])
 def get_dataset():
     data = load_dataset()
-    page = int(request.args.get("page", 1))
-    per_page = int(request.args.get("per_page", 20))
-    search = request.args.get("search", "").lower()
+    page       = int(request.args.get("page", 1))
+    per_page   = int(request.args.get("per_page", 20))
+    search     = request.args.get("search", "").lower()
     label_filter = request.args.get("label", "").lower()
 
     filtered = data
@@ -55,35 +76,34 @@ def get_dataset():
     if label_filter:
         filtered = [d for d in filtered if d["label"].lower() == label_filter]
 
-    total = len(filtered)
-    start = (page - 1) * per_page
-    end = start + per_page
-    paginated = filtered[start:end]
+    total    = len(filtered)
+    start    = (page - 1) * per_page
+    paginated = filtered[start:start + per_page]
 
     return jsonify({
-        "data": paginated,
-        "total": total,
-        "page": page,
-        "per_page": per_page,
+        "data":        paginated,
+        "total":       total,
+        "page":        page,
+        "per_page":    per_page,
         "total_pages": (total + per_page - 1) // per_page
     })
 
 
 @app.route("/api/dataset/labels", methods=["GET"])
 def get_labels():
-    data = load_dataset()
+    data   = load_dataset()
     labels = sorted(set(d["label"] for d in data))
     return jsonify(labels)
 
 
 @app.route("/api/dataset/stats", methods=["GET"])
 def get_stats():
-    data = load_dataset()
+    data         = load_dataset()
     label_counts = {}
     for d in data:
         label_counts[d["label"]] = label_counts.get(d["label"], 0) + 1
     return jsonify({
-        "total": len(data),
+        "total":        len(data),
         "total_labels": len(label_counts),
         "label_counts": label_counts
     })
@@ -91,8 +111,8 @@ def get_stats():
 
 @app.route("/api/dataset", methods=["POST"])
 def add_item():
-    data = load_dataset()
-    body = request.json
+    data  = load_dataset()
+    body  = request.json
     texts = body.get("texts", "").strip()
     label = body.get("label", "").strip()
 
@@ -100,7 +120,7 @@ def add_item():
         return jsonify({"error": "texts dan label wajib diisi"}), 400
 
     next_nomor = max((d["nomor"] for d in data), default=0) + 1
-    new_item = {"nomor": next_nomor, "texts": texts, "label": label}
+    new_item   = {"nomor": next_nomor, "texts": texts, "label": label}
     data.append(new_item)
     save_dataset(data)
     return jsonify(new_item), 201
@@ -121,7 +141,7 @@ def update_item(nomor):
 
 @app.route("/api/dataset/<int:nomor>", methods=["DELETE"])
 def delete_item(nomor):
-    data = load_dataset()
+    data     = load_dataset()
     new_data = [d for d in data if d["nomor"] != nomor]
     if len(new_data) == len(data):
         return jsonify({"error": "Data tidak ditemukan"}), 404
@@ -129,12 +149,12 @@ def delete_item(nomor):
     return jsonify({"message": "Data berhasil dihapus"})
 
 
-# ─── Label Management ───────────────────────────────────────────
+# ─── Label Management ────────────────────────────────────────────
 
 @app.route("/api/labels", methods=["GET"])
 def get_labels_detail():
     """Return all unique labels with their counts, sorted alphabetically."""
-    data = load_dataset()
+    data         = load_dataset()
     label_counts = {}
     for d in data:
         label_counts[d["label"]] = label_counts.get(d["label"], 0) + 1
@@ -148,7 +168,7 @@ def get_labels_detail():
 @app.route("/api/labels/rename", methods=["PUT"])
 def rename_label():
     """Rename all occurrences of old_label to new_label in the dataset."""
-    body = request.json
+    body      = request.json
     old_label = body.get("old_label", "").strip()
     new_label = body.get("new_label", "").strip()
 
@@ -157,7 +177,7 @@ def rename_label():
     if old_label == new_label:
         return jsonify({"error": "Label baru sama dengan label lama"}), 400
 
-    data = load_dataset()
+    data          = load_dataset()
     updated_count = 0
     for item in data:
         if item["label"] == old_label:
@@ -169,24 +189,24 @@ def rename_label():
 
     save_dataset(data)
     return jsonify({
-        "message": f"Label '{old_label}' berhasil diubah menjadi '{new_label}'",
+        "message":       f"Label '{old_label}' berhasil diubah menjadi '{new_label}'",
         "updated_count": updated_count,
-        "old_label": old_label,
-        "new_label": new_label
+        "old_label":     old_label,
+        "new_label":     new_label
     })
 
 
 @app.route("/api/labels/delete", methods=["DELETE"])
 def delete_label():
     """Delete all dataset entries with the given label."""
-    body = request.json
+    body  = request.json
     label = body.get("label", "").strip()
 
     if not label:
         return jsonify({"error": "label wajib diisi"}), 400
 
-    data = load_dataset()
-    new_data = [d for d in data if d["label"] != label]
+    data          = load_dataset()
+    new_data      = [d for d in data if d["label"] != label]
     deleted_count = len(data) - len(new_data)
 
     if deleted_count == 0:
@@ -194,9 +214,9 @@ def delete_label():
 
     save_dataset(new_data)
     return jsonify({
-        "message": f"Label '{label}' dan {deleted_count} data berhasil dihapus",
+        "message":       f"Label '{label}' dan {deleted_count} data berhasil dihapus",
         "deleted_count": deleted_count,
-        "label": label
+        "label":         label
     })
 
 
@@ -208,8 +228,8 @@ def train_model():
     if len(data) < 2:
         return jsonify({"error": "Dataset terlalu sedikit untuk melatih model"}), 400
 
-    texts = [item["texts"] for item in data]
-    labels = [item["label"] for item in data]
+    texts  = [item["texts"] for item in data]
+    labels = [item["label"]  for item in data]
 
     vectorizer = TfidfVectorizer()
     X = vectorizer.fit_transform(texts)
@@ -217,30 +237,45 @@ def train_model():
     model = LogisticRegression(max_iter=1000)
     model.fit(X, labels)
 
-    pickle.dump(model, open(MODEL_PATH, "wb"))
+    pickle.dump(model,      open(MODEL_PATH,      "wb"))
     pickle.dump(vectorizer, open(VECTORIZER_PATH, "wb"))
 
     unique_labels = list(set(labels))
     return jsonify({
-        "message": "Model berhasil dilatih dan disimpan",
-        "total_data": len(data),
-        "total_labels": len(unique_labels),
-        "labels": sorted(unique_labels),
-        "model_file": MODEL_PATH,
+        "message":         "Model berhasil dilatih dan disimpan",
+        "total_data":      len(data),
+        "total_labels":    len(unique_labels),
+        "labels":          sorted(unique_labels),
+        "model_file":      MODEL_PATH,
         "vectorizer_file": VECTORIZER_PATH
     })
 
 
 @app.route("/api/model/status", methods=["GET"])
 def model_status():
-    model_exists = os.path.exists(MODEL_PATH)
+    model_exists      = os.path.exists(MODEL_PATH)
     vectorizer_exists = os.path.exists(VECTORIZER_PATH)
     info = {"model_exists": model_exists, "vectorizer_exists": vectorizer_exists}
+
     if model_exists:
-        info["model_size"] = os.path.getsize(MODEL_PATH)
-        info["model_modified"] = os.path.getmtime(MODEL_PATH)
+        model_mtime        = os.path.getmtime(MODEL_PATH)
+        info["model_size"]     = os.path.getsize(MODEL_PATH)
+        info["model_modified"] = model_mtime
+    else:
+        model_mtime = None
+
     if vectorizer_exists:
         info["vectorizer_size"] = os.path.getsize(VECTORIZER_PATH)
+
+    # Cek apakah dataset lebih baru dari model → perlu training ulang
+    dataset_mtime            = get_dataset_modified_time()
+    info["dataset_modified"] = dataset_mtime
+
+    if model_exists and dataset_mtime is not None and model_mtime is not None:
+        info["needs_retrain"] = dataset_mtime > model_mtime
+    else:
+        info["needs_retrain"] = False
+
     return jsonify(info)
 
 
@@ -253,11 +288,11 @@ def predict():
     if not text:
         return jsonify({"error": "text wajib diisi"}), 400
 
-    model = pickle.load(open(MODEL_PATH, "rb"))
+    model      = pickle.load(open(MODEL_PATH,      "rb"))
     vectorizer = pickle.load(open(VECTORIZER_PATH, "rb"))
-    X = vectorizer.transform([text])
+    X          = vectorizer.transform([text])
     prediction = model.predict(X)[0]
-    proba = model.predict_proba(X)[0]
+    proba      = model.predict_proba(X)[0]
     confidence = float(max(proba))
     return jsonify({"text": text, "intent": prediction, "confidence": round(confidence * 100, 2)})
 
