@@ -22,6 +22,7 @@ Sistem manajemen dataset dan pelatihan model machine learning untuk klasifikasi 
 intent-manager/
 │
 ├── app.py                  # Back-end Flask (API server)
+├── predict_cli.py          # Contoh implementasi prediksi via terminal
 ├── dataset.json            # Dataset intent (teks + label)
 ├── requirements.txt        # Dependensi Python
 ├── intent_model.pkl        # Model (dibuat setelah training)
@@ -250,12 +251,78 @@ File `dataset.json` berformat array JSON dengan struktur:
 - Pastikan virtual environment sudah diaktifkan
 - Jalankan ulang `pip install -r requirements.txt`
 
-**Prediksi tidak bisa dilakukan:**
+**Prediksi tidak bisa dilakukan (web):**
 - Model belum dilatih — buka halaman **Latih Model** dan klik **Mulai Training**
+
+**`predict_cli.py` gagal — "File model tidak ditemukan":**
+- Jalankan `python app.py`, buka `http://localhost:5000`, latih model terlebih dahulu
+- Pastikan `predict_cli.py` berada di folder yang sama dengan `intent_model.pkl` dan `vectorizer.pkl`
 
 **Data tidak tersimpan:**
 - Pastikan file `dataset.json` ada di direktori yang sama dengan `app.py`
 - Pastikan Python memiliki izin tulis pada direktori tersebut
+
+---
+
+## 🖥️ Contoh Implementasi — Prediksi via Terminal
+
+File `predict_cli.py` adalah contoh implementasi langsung dari model yang sudah dilatih (`intent_model.pkl` + `vectorizer.pkl`), tanpa memerlukan server Flask.
+
+### Prasyarat
+
+Pastikan model sudah dilatih terlebih dahulu melalui aplikasi web (`python app.py` → halaman **Latih Model**).
+
+### Menjalankan
+
+```bash
+python predict_cli.py
+```
+
+### Tampilan di Terminal
+
+```
+╔══════════════════════════════════════════════════════╗
+║          🧠  Intent Prediction CLI                   ║
+║          Model: TF-IDF + Logistic Regression         ║
+╚══════════════════════════════════════════════════════╝
+
+  Memuat model... ✓  (12 intent dimuat)
+
+  ➤ Masukkan teks: dimana lokasi Kawah Putih Bandung
+
+  ────────────────────────────────────────────────────
+
+  📝 Teks     : "dimana lokasi Kawah Putih Bandung"
+
+  🎯 Intent   :  info_lokasi_wisata
+
+  📊 Confidence:
+     ████████████████████████░░░░░░  82.4%
+
+  🏆 Top-3 Kandidat:
+     ▶ info_lokasi_wisata          ████████████████████  82.4%
+       info_tiket_wisata           ████░░░░░░░░░░░░░░░░  12.1%
+       rekomendasi_wisata          ██░░░░░░░░░░░░░░░░░░   5.5%
+
+  ────────────────────────────────────────────────────
+```
+
+### Perintah Khusus dalam CLI
+
+| Perintah | Fungsi |
+|---|---|
+| `exit` / `quit` / `q` | Keluar dari program |
+| `help` | Tampilkan daftar perintah |
+| `clear` | Bersihkan layar terminal |
+| `Ctrl+C` | Paksa keluar |
+
+### Cara Kerja
+
+`predict_cli.py` memuat `intent_model.pkl` dan `vectorizer.pkl` menggunakan `pickle`, kemudian untuk setiap teks yang dimasukkan:
+
+1. Teks di-*transform* menggunakan **TF-IDF Vectorizer**
+2. Vektor dimasukkan ke **Logistic Regression** untuk mendapat prediksi intent
+3. Probabilitas tiap kelas dihitung untuk menampilkan **confidence score** dan **top-3 kandidat**
 
 ---
 
