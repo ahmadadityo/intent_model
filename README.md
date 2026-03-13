@@ -21,8 +21,8 @@ Sistem manajemen dataset dan pelatihan model machine learning untuk klasifikasi 
 ```
 intent-manager/
 │
-├── app.py                  # Back-end Flask (API server)
-├── predict_cli.py          # Contoh implementasi prediksi via terminal
+├── app.py                  # Back-end Flask (API server + UI)
+├── intent_api.py           # API khusus n8n / integrasi eksternal
 ├── dataset.json            # Dataset intent (teks + label)
 ├── requirements.txt        # Dependensi Python
 ├── intent_model.pkl        # Model (dibuat setelah training)
@@ -251,12 +251,8 @@ File `dataset.json` berformat array JSON dengan struktur:
 - Pastikan virtual environment sudah diaktifkan
 - Jalankan ulang `pip install -r requirements.txt`
 
-**Prediksi tidak bisa dilakukan (web):**
+**Prediksi tidak bisa dilakukan:**
 - Model belum dilatih — buka halaman **Latih Model** dan klik **Mulai Training**
-
-**`predict_cli.py` gagal — "File model tidak ditemukan":**
-- Jalankan `python app.py`, buka `http://localhost:5000`, latih model terlebih dahulu
-- Pastikan `predict_cli.py` berada di folder yang sama dengan `intent_model.pkl` dan `vectorizer.pkl`
 
 **Data tidak tersimpan:**
 - Pastikan file `dataset.json` ada di direktori yang sama dengan `app.py`
@@ -264,65 +260,224 @@ File `dataset.json` berformat array JSON dengan struktur:
 
 ---
 
-## 🖥️ Contoh Implementasi — Prediksi via Terminal
+## 🔗 Intent API — Integrasi n8n & Eksternal
 
-File `predict_cli.py` adalah contoh implementasi langsung dari model yang sudah dilatih (`intent_model.pkl` + `vectorizer.pkl`), tanpa memerlukan server Flask.
+File `intent_api.py` adalah API terpisah yang dirancang khusus untuk integrasi dengan **n8n** atau tools eksternal lainnya. Berjalan di port **5001** (terpisah dari `app.py` di port 5000).
 
-### Prasyarat
-
-Pastikan model sudah dilatih terlebih dahulu melalui aplikasi web (`python app.py` → halaman **Latih Model**).
-
-### Menjalankan
+### Menjalankan Intent API
 
 ```bash
-python predict_cli.py
+python intent_api.py
+# atau dengan opsi custom:
+python intent_api.py --host 0.0.0.0 --port 5001 --debug
 ```
 
-### Tampilan di Terminal
+> **Prasyarat:** Model harus sudah dilatih terlebih dahulu melalui `app.py` → halaman **Latih Model**.
 
-```
-╔══════════════════════════════════════════════════════╗
-║          🧠  Intent Prediction CLI                   ║
-║          Model: TF-IDF + Logistic Regression         ║
-╚══════════════════════════════════════════════════════╝
+### Endpoint Intent API
 
-  Memuat model... ✓  (12 intent dimuat)
+| Method | Endpoint | Deskripsi |
+|---|---|---|
+| `GET` | `/health` | Health check & status model |
+| `GET` | `/model/info` | Info model & daftar semua label |
+| `POST` | `/predict` | Prediksi intent dari 1 teks |
+| `POST` | `/predict/batch` | Prediksi banyak teks sekaligus (maks 100) |
 
-  ➤ Masukkan teks: dimana lokasi Kawah Putih Bandung
+### Keamanan (Opsional — API Key)
 
-  ────────────────────────────────────────────────────
+Untuk mengaktifkan autentikasi, set environment variable sebelum menjalankan server:
 
-  📝 Teks     : "dimana lokasi Kawah Putih Bandung"
+```bash
+# Linux / macOS
+export INTENT_API_KEY=rahasia123
+python intent_api.py
 
-  🎯 Intent   :  info_lokasi_wisata
-
-  📊 Confidence:
-     ████████████████████████░░░░░░  82.4%
-
-  🏆 Top-3 Kandidat:
-     ▶ info_lokasi_wisata          ████████████████████  82.4%
-       info_tiket_wisata           ████░░░░░░░░░░░░░░░░  12.1%
-       rekomendasi_wisata          ██░░░░░░░░░░░░░░░░░░   5.5%
-
-  ────────────────────────────────────────────────────
+# Windows
+set INTENT_API_KEY=rahasia123
+python intent_api.py
 ```
 
-### Perintah Khusus dalam CLI
+Tambahkan header berikut di setiap request:
+```
+X-API-Key: rahasia123
+```
 
-| Perintah | Fungsi |
+Jika `INTENT_API_KEY` tidak di-set, autentikasi dinonaktifkan (semua request diterima).
+
+---
+
+## 🧪 Panduan Uji Coba dengan Postman
+
+### Langkah 0 — Pastikan Server Aktif
+
+Jalankan `intent_api.py` dan pastikan terminal menampilkan:
+```
+Running on http://0.0.0.0:5001
+```
+
+---
+
+### 1. Health Check
+
+Gunakan ini untuk memastikan server aktif dan model sudah siap.
+
+- **Method:** `GET`
+- **URL:** `http://localhost:5001/health`
+- Klik **Send**
+
+**Response sukses:**
+```json
+{
+  "model_ready": true,
+  "status": "ok",
+  "timestamp": "2026-03-13T00:00:00Z"
+}
+```
+
+**Response jika model belum dilatih:**
+```json
+{
+  "model_ready": false,
+  "status": "degraded",
+  "timestamp": "2026-03-13T00:00:00Z"
+}
+```
+
+---
+
+### 2. Predict — Prediksi 1 Teks
+
+- **Method:** `POST`
+- **URL:** `http://localhost:5001/predict`
+- Tab **Body** → pilih **raw** → dropdown ubah ke **JSON**
+- Isi body:
+
+```json
+{
+  "text": "dimana lokasi Kawah Putih Bandung?"
+}
+```
+
+- Klik **Send**
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "text": "dimana lokasi Kawah Putih Bandung?",
+  "intent": "info_lokasi_wisata",
+  "confidence": 97.34,
+  "all_scores": {
+    "info_lokasi_wisata": 97.34,
+    "info_tiket_wisata": 2.66
+  }
+}
+```
+
+---
+
+### 3. Predict Batch — Prediksi Banyak Teks Sekaligus
+
+- **Method:** `POST`
+- **URL:** `http://localhost:5001/predict/batch`
+- **Body → raw → JSON:**
+
+```json
+{
+  "texts": [
+    "dimana lokasi Kawah Putih?",
+    "berapa harga tiket Tangkuban Perahu?",
+    "jam buka Kebun Binatang Bandung?"
+  ]
+}
+```
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "count": 3,
+  "results": [
+    { "text": "dimana lokasi Kawah Putih?", "intent": "info_lokasi_wisata", "confidence": 97.34 },
+    { "text": "berapa harga tiket Tangkuban Perahu?", "intent": "info_tiket_wisata", "confidence": 94.10 },
+    { "text": "jam buka Kebun Binatang Bandung?", "intent": "info_jam_buka", "confidence": 88.75 }
+  ]
+}
+```
+
+---
+
+### 4. Model Info — Cek Daftar Label
+
+- **Method:** `GET`
+- **URL:** `http://localhost:5001/model/info`
+- Klik **Send**
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "total_classes": 5,
+  "classes": ["info_jam_buka", "info_lokasi_wisata", "info_tiket_wisata", "rekomendasi_wisata", "ulasan_wisata"],
+  "model_size_kb": 12.4,
+  "vec_size_kb": 85.2,
+  "model_trained_at": "2026-03-13T08:00:00Z"
+}
+```
+
+---
+
+### 5. Jika Menggunakan API Key
+
+Tambahkan header di Postman:
+
+1. Klik tab **Headers**
+2. Tambahkan baris baru:
+
+| Key | Value |
 |---|---|
-| `exit` / `quit` / `q` | Keluar dari program |
-| `help` | Tampilkan daftar perintah |
-| `clear` | Bersihkan layar terminal |
-| `Ctrl+C` | Paksa keluar |
+| `X-API-Key` | `rahasia123` |
 
-### Cara Kerja
+---
 
-`predict_cli.py` memuat `intent_model.pkl` dan `vectorizer.pkl` menggunakan `pickle`, kemudian untuk setiap teks yang dimasukkan:
+### Troubleshooting Postman
 
-1. Teks di-*transform* menggunakan **TF-IDF Vectorizer**
-2. Vektor dimasukkan ke **Logistic Regression** untuk mendapat prediksi intent
-3. Probabilitas tiap kelas dihitung untuk menampilkan **confidence score** dan **top-3 kandidat**
+| Error | Penyebab | Solusi |
+|---|---|---|
+| `Could not get response` | Server belum jalan | Jalankan `python intent_api.py` |
+| `"status": "degraded"` | Model belum dilatih | Buka `app.py` → halaman **Latih Model** |
+| `401 Unauthorized` | API Key salah / tidak ada | Tambahkan header `X-API-Key` yang benar |
+| `400 Bad Request` | Body bukan JSON | Pastikan pilih **raw → JSON** di Postman |
+| `400` field kosong | `text` tidak diisi | Pastikan body berisi field `text` yang tidak kosong |
+
+---
+
+## 🔄 Integrasi dengan n8n
+
+### Konfigurasi HTTP Request Node (Single Predict)
+
+| Setting | Value |
+|---|---|
+| **Method** | `POST` |
+| **URL** | `http://<server>:5001/predict` |
+| **Authentication** | None *(atau Header Auth jika pakai API Key)* |
+| **Body Content Type** | `JSON` |
+| **Body** | `{ "text": "{{ $json.input_text }}" }` |
+
+### Ambil Hasil di Node Berikutnya
+
+| Field | Expression n8n |
+|---|---|
+| Intent | `{{ $json.intent }}` |
+| Confidence | `{{ $json.confidence }}` |
+| Status | `{{ $json.status }}` |
+
+### Contoh Alur n8n
+
+```
+[Webhook] → [HTTP Request /predict] → [IF confidence > 80] → [aksi selanjutnya]
+                                                           ↘ [fallback / eskalasi]
+```
 
 ---
 
