@@ -520,6 +520,42 @@
     [data-theme="light"] .toast {
       box-shadow: 0 4px 20px rgba(80,80,160,0.12);
     }
+    /* ── Query Result Modal ── */
+    .qr-modal {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px; width: 100%; max-width: 860px;
+      max-height: 85vh; display: flex; flex-direction: column;
+      transform: translateY(20px); transition: transform 0.2s, background 0.3s;
+      box-shadow: 0 16px 48px var(--shadow);
+    }
+    .qr-modal-overlay.open .qr-modal { transform: translateY(0); }
+    .qr-modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.65); backdrop-filter: blur(6px);
+      z-index: 1500; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .qr-modal-overlay.open { opacity: 1; pointer-events: all; }
+    .qr-table-wrap { overflow: auto; flex: 1; border-radius: 8px; border: 1px solid var(--border); margin-top: 16px; }
+    .qr-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .qr-table thead th {
+      background: var(--surface); padding: 9px 14px;
+      text-align: left; font-size: 11px; font-weight: 700;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em;
+      border-bottom: 1px solid var(--border); white-space: nowrap;
+      position: sticky; top: 0; z-index: 1;
+    }
+    .qr-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+    .qr-table tbody tr:last-child { border-bottom: none; }
+    .qr-table tbody tr:hover { background: var(--table-hover); }
+    .qr-table tbody td { padding: 9px 14px; color: var(--text); word-break: break-word; max-width: 260px; }
+    .qr-query-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 14px;
+      font-family: 'Space Mono', monospace; font-size: 11px;
+      color: var(--accent); white-space: pre-wrap; word-break: break-all;
+      max-height: 72px; overflow-y: auto;
+    }
   </style>
 </head>
 <body>
@@ -924,6 +960,38 @@
     <div class="confirm-actions">
       <button class="btn btn-ghost" onclick="closeDelLabel()">Batal</button>
       <button class="btn btn-danger-solid" onclick="executeDeleteLabel()">Ya, Hapus Semua</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Modal: Query Result ══ -->
+<div class="qr-modal-overlay" id="qr-modal-overlay" onclick="closeQrModalOutside(event)">
+  <div class="qr-modal">
+    <!-- Header -->
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-shrink:0;">
+      <div style="min-width:0;">
+        <div style="font-size:18px; font-weight:800; color:var(--text); margin-bottom:6px;">
+          🔍 Hasil Query
+          <span class="label-badge" style="font-size:12px; vertical-align:middle; margin-left:6px;" id="qr-label-badge"></span>
+        </div>
+        <div class="qr-query-box" id="qr-query-box"></div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="closeQrModal()" style="flex-shrink:0; margin-top:2px;">✕ Tutup</button>
+    </div>
+
+    <!-- Meta info -->
+    <div style="display:flex; align-items:center; gap:16px; margin-top:14px; flex-shrink:0;">
+      <span id="qr-total-info" style="font-size:12px; color:var(--muted);"></span>
+      <div id="qr-loading" style="display:none; align-items:center; gap:8px; font-size:12px; color:var(--muted);">
+        <span class="spinner"></span> Menjalankan query...
+      </div>
+    </div>
+
+    <!-- Table area -->
+    <div class="qr-table-wrap" id="qr-table-wrap">
+      <div class="empty-state" style="padding:40px 20px;">
+        <div class="spinner"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -1707,6 +1775,7 @@
         </div>
         <div style="flex:0 0 auto; display:flex; flex-direction:column; gap:6px;">
           <button class="btn btn-success btn-sm" onclick="saveIntentQuery('${escHtml(item.label)}')">💾</button>
+          ${item.query ? `<button class="btn btn-primary btn-sm" onclick="openQrModal('${escHtml(item.label)}')">👁</button>` : ''}
           ${item.query ? `<button class="btn btn-danger btn-sm" onclick="deleteIntentQuery('${escHtml(item.label)}')">🗑️</button>` : ''}
         </div>
       </div>
@@ -1725,6 +1794,74 @@
     const json = await res.json();
     if (res.ok) { toast(json.message, 'success'); loadIntentQueries(); }
     else          toast(json.error, 'error');
+  }
+
+  // ══ Query Result Modal ════════════════════════════════════════════
+  function openQrModal(label) {
+    document.getElementById('qr-label-badge').textContent = label;
+    document.getElementById('qr-query-box').textContent   = '…';
+    document.getElementById('qr-total-info').textContent  = '';
+    document.getElementById('qr-table-wrap').innerHTML    =
+      '<div class="empty-state" style="padding:40px 20px;"><div class="spinner"></div></div>';
+    document.getElementById('qr-loading').style.display  = 'flex';
+    document.getElementById('qr-modal-overlay').classList.add('open');
+    executeQrQuery(label);
+  }
+
+  function closeQrModal()          { document.getElementById('qr-modal-overlay').classList.remove('open'); }
+  function closeQrModalOutside(e)  { if (e.target === document.getElementById('qr-modal-overlay')) closeQrModal(); }
+
+  async function executeQrQuery(label) {
+    try {
+      const res  = await fetch(`${API}/api/intent-queries/${encodeURIComponent(label)}/execute`, {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ params: [] })
+      });
+      const json = await res.json();
+
+      document.getElementById('qr-loading').style.display = 'none';
+
+      if (!json.success) {
+        document.getElementById('qr-query-box').textContent  = '—';
+        document.getElementById('qr-table-wrap').innerHTML   = `
+          <div class="empty-state" style="padding:40px 20px;">
+            <div class="icon">⚠️</div>
+            <h3>Gagal menjalankan query</h3>
+            <p style="color:var(--accent2); font-family:'Space Mono',monospace; font-size:11px; margin-top:8px;">${escHtml(json.error)}</p>
+          </div>`;
+        return;
+      }
+
+      // Tampilkan query yang dieksekusi
+      document.getElementById('qr-query-box').textContent = json.query;
+      document.getElementById('qr-total-info').textContent =
+        `${json.total} baris ditemukan`;
+
+      if (!json.rows.length) {
+        document.getElementById('qr-table-wrap').innerHTML =
+          '<div class="empty-state" style="padding:40px 20px;"><div class="icon">📭</div><h3>Tidak ada data</h3><p>Query berhasil dijalankan namun tidak mengembalikan baris.</p></div>';
+        return;
+      }
+
+      // Render tabel
+      const thead = `<thead><tr>${json.columns.map(c => `<th>${escHtml(c)}</th>`).join('')}</tr></thead>`;
+      const tbody = `<tbody>${
+        json.rows.map(row =>
+          `<tr>${json.columns.map(c => `<td>${row[c] !== null && row[c] !== undefined ? escHtml(String(row[c])) : '<span style="color:var(--muted);font-style:italic;">NULL</span>'}</td>`).join('')}</tr>`
+        ).join('')
+      }</tbody>`;
+      document.getElementById('qr-table-wrap').innerHTML =
+        `<table class="qr-table">${thead}${tbody}</table>`;
+
+    } catch(e) {
+      document.getElementById('qr-loading').style.display = 'none';
+      document.getElementById('qr-table-wrap').innerHTML  = `
+        <div class="empty-state" style="padding:40px 20px;">
+          <div class="icon">❌</div>
+          <h3>Error</h3>
+          <p>${escHtml(e.message)}</p>
+        </div>`;
+    }
   }
 
   async function deleteIntentQuery(label) {

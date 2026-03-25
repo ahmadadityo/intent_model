@@ -328,7 +328,7 @@ def save_db_config_api():
         "host":     body["host"].strip(),
         "port":     int(body["port"]),
         "username": body["username"].strip(),
-        # "password": body["password"],      # simpan asli
+        "password": body.get("password", ""),   # boleh kosong
         "database": body["database"].strip()
     }
     save_db_config(config)
@@ -359,7 +359,7 @@ def test_db_connection():
             host=config["host"],
             port=int(config.get("port", 3306)),
             user=config["username"],
-            password=config["password"],
+            password=config.get("password", ""),
             database=config["database"],
             connection_timeout=5
         )
@@ -414,6 +414,52 @@ def save_intent_query(label):
         "label":   label,
         "query":   query
     })
+
+@app.route("/api/intent-queries/<path:label>/execute", methods=["POST"])
+def execute_intent_query(label):
+    """Jalankan query SQL yang tersimpan untuk label tertentu."""
+    if not MYSQL_AVAILABLE:
+        return jsonify({"success": False, "error": "Library mysql-connector-python belum terinstal."}), 400
+
+    queries = load_intent_queries()
+    query   = queries.get(label, "").strip()
+
+    if not query:
+        return jsonify({"success": False, "error": f"Tidak ada query untuk label '{label}'"}), 404
+
+    config = load_db_config()
+    if not config or not config.get("host"):
+        return jsonify({"success": False, "error": "Konfigurasi database belum disimpan."}), 400
+
+    # Ambil params opsional dari body (untuk placeholder ?)
+    body   = request.json or {}
+    params = body.get("params", [])
+
+    try:
+        conn = mysql.connector.connect(
+            host=config["host"],
+            port=int(config.get("port", 3306)),
+            user=config["username"],
+            password=config.get("password", ""),
+            database=config["database"],
+            connection_timeout=5
+        )
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(query, params)
+        rows    = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description] if cursor.description else []
+        cursor.close()
+        conn.close()
+        return jsonify({
+            "success": True,
+            "label":   label,
+            "query":   query,
+            "columns": columns,
+            "rows":    rows,
+            "total":   len(rows)
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 200
 
 
 @app.route("/api/intent-queries/<path:label>", methods=["DELETE"])
