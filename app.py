@@ -3,6 +3,12 @@ import os
 import pickle
 import time
 
+try:
+    import mysql.connector
+    MYSQL_AVAILABLE = True
+except ImportError:
+    MYSQL_AVAILABLE = False
+
 from flask import Flask, jsonify, request, send_from_directory
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -24,6 +30,8 @@ DATASET_PATH          = "dataset.json"
 MODEL_PATH            = "intent_model.pkl"
 VECTORIZER_PATH       = "vectorizer.pkl"
 DATASET_MODIFIED_PATH = "dataset_modified.txt"   # timestamp perubahan dataset
+DB_CONFIG_PATH        = "db_config.json"
+INTENT_QUERY_PATH     = "intent_query.json"
 
 
 # ─── Helpers ─────────────────────────────────────────────────────
@@ -296,12 +304,159 @@ def predict():
     confidence = float(max(proba))
     return jsonify({"text": text, "intent": prediction, "confidence": round(confidence * 100, 2)})
 
+# ─── Database Config Endpoints ───────────────────────────────────
+
+@app.route("/api/db/config", methods=["GET"])
+def get_db_config():
+    config = load_db_config()
+    # Jangan kirim password ke frontend secara penuh
+    safe = config.copy()
+    if safe.get("password"):
+        safe["password"] = "••••••••"
+    return jsonify(safe)
+
+
+@app.route("/api/db/config", methods=["POST"])
+def save_db_config_api():
+    body = request.json
+    required = ["host", "port", "username", "database"]
+    for field in required:
+        if field not in body or str(body[field]).strip() == "":
+            return jsonify({"error": f"Field '{field}' wajib diisi"}), 400
+
+    config = {
+        "host":     body["host"].strip(),
+        "port":     int(body["port"]),
+        "username": body["username"].strip(),
+        # "password": body["password"],      # simpan asli
+        "database": body["database"].strip()
+    }
+    save_db_config(config)
+    return jsonify({"message": "Konfigurasi database berhasil disimpan"})
+
+
+@app.route("/api/db/test", methods=["POST"])
+def test_db_connection():
+    if not MYSQL_AVAILABLE:
+        return jsonify({
+            "success": False,
+            "error": "Library mysql-connector-python belum terinstal. Jalankan: pip install mysql-connector-python"
+        }), 400
+
+    body = request.json
+
+    # Bisa pakai config dari body (test sebelum simpan) atau dari file
+    if body and body.get("host"):
+        config = body
+    else:
+        config = load_db_config()
+
+    if not config:
+        return jsonify({"success": False, "error": "Konfigurasi database belum disimpan"}), 400
+
+    try:
+        conn = mysql.connector.connect(
+            host=config["host"],
+            port=int(config.get("port", 3306)),
+            user=config["username"],
+            password=config["password"],
+            database=config["database"],
+            connection_timeout=5
+        )
+        cursor = conn.cursor()
+        cursor.execute("SELECT VERSION()")
+        version = cursor.fetchone()[0]
+        cursor.close()
+        conn.close()
+        return jsonify({
+            "success": True,
+            "message": f"Koneksi berhasil! MySQL versi {version}",
+            "host":    config["host"],
+            "database": config["database"]
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 200
+
+
+# ─── Intent Query Endpoints ───────────────────────────────────────
+
+@app.route("/api/intent-queries", methods=["GET"])
+def get_intent_queries():
+    queries = load_intent_queries()
+    # Gabungkan dengan daftar label dari dataset supaya semua label terlihat
+    data    = load_dataset()
+    labels  = sorted(set(d["label"] for d in data))
+    result  = []
+    for label in labels:
+        result.append({
+            "label": label,
+            "query": queries.get(label, "")
+        })
+    # Tambahkan entry dari intent_query.json yang labelnya sudah tidak ada di dataset
+    for label, query in queries.items():
+        if label not in set(labels):
+            result.append({"label": label, "query": query, "orphan": True})
+    return jsonify(result)
+
+
+@app.route("/api/intent-queries/<path:label>", methods=["PUT"])
+def save_intent_query(label):
+    body  = request.json
+    query = body.get("query", "").strip()
+    queries = load_intent_queries()
+    if query:
+        queries[label] = query
+    else:
+        queries.pop(label, None)   # hapus jika query dikosongkan
+    save_intent_queries(queries)
+    return jsonify({
+        "message": f"Query untuk label '{label}' berhasil disimpan",
+        "label":   label,
+        "query":   query
+    })
+
+
+@app.route("/api/intent-queries/<path:label>", methods=["DELETE"])
+def delete_intent_query(label):
+    queries = load_intent_queries()
+    if label not in queries:
+        return jsonify({"error": f"Query untuk label '{label}' tidak ditemukan"}), 404
+    del queries[label]
+    save_intent_queries(queries)
+    return jsonify({"message": f"Query untuk label '{label}' berhasil dihapus"})
+
 
 # ─── Serve Frontend ──────────────────────────────────────────────
 
 @app.route("/")
 def index():
     return send_from_directory("static", "index.html")
+
+
+# ─── DB Config & Intent Query Helpers ────────────────────────────
+
+def load_db_config():
+    if not os.path.exists(DB_CONFIG_PATH):
+        return {}
+    with open(DB_CONFIG_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_db_config(config):
+    with open(DB_CONFIG_PATH, "w", encoding="utf-8") as f:
+        json.dump(config, f, ensure_ascii=False, indent=2)
+
+
+def load_intent_queries():
+    if not os.path.exists(INTENT_QUERY_PATH):
+        return {}
+    with open(INTENT_QUERY_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_intent_queries(queries):
+    with open(INTENT_QUERY_PATH, "w", encoding="utf-8") as f:
+        json.dump(queries, f, ensure_ascii=False, indent=2)
 
 
 if __name__ == "__main__":

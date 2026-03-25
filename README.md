@@ -13,6 +13,7 @@ Sistem manajemen dataset dan pelatihan model machine learning untuk klasifikasi 
 | ⚡ **Latih Model** | Buat model intent (`.pkl`) menggunakan TF-IDF + Logistic Regression |
 | 🔮 **Uji Prediksi** | Tes model secara langsung dari antarmuka web |
 | 📊 **Statistik** | Distribusi label dan ringkasan dataset |
+| 🗄️ **Database** | Distribusi label dan ringkasan dataset |
 
 ---
 
@@ -24,6 +25,8 @@ intent-manager/
 ├── app.py                  # Back-end Flask (API server + UI)
 ├── intent_api.py           # API khusus n8n / integrasi eksternal
 ├── dataset.json            # Dataset intent (teks + label)
+├── db_config.json          # Dataset konfigurasi database
+├── intent_query.json       # Dataset konfigurasi query berdasarkan label
 ├── requirements.txt        # Dependensi Python
 ├── intent_model.pkl        # Model (dibuat setelah training)
 ├── vectorizer.pkl          # Vectorizer (dibuat setelah training)
@@ -78,6 +81,7 @@ Dependensi yang diinstal:
 - `flask` — Web framework untuk API back-end
 - `flask-cors` — Menangani Cross-Origin Resource Sharing
 - `scikit-learn` — Library machine learning (TF-IDF & Logistic Regression)
+- `mysql-connector-python` — Library menghubungkan aplikasi Python dengan database MySQL
 
 ---
 
@@ -182,6 +186,13 @@ Menampilkan ringkasan dan distribusi dataset:
 
 ---
 
+### 🗄️ Halaman Database
+
+Halaman untuk mengatur koneksi MySQL dan memetakan query SQL ke setiap label intent.
+Halaman ini terbagi menjadi dua bagian utama: **Konfigurasi Koneksi** dan **Query per Label Intent**.
+
+---
+
 ## 🔌 API Endpoints
 
 | Method | Endpoint | Deskripsi |
@@ -198,6 +209,12 @@ Menampilkan ringkasan dan distribusi dataset:
 | `POST` | `/api/train` | Latih dan simpan model |
 | `GET` | `/api/model/status` | Status ketersediaan model |
 | `POST` | `/api/predict` | Prediksi intent dari teks |
+| `GET` | `/api/db/config` | Ambil konfigurasi database (password di-mask) |
+| `POST` | `/api/db/config` | Simpan konfigurasi koneksi MySQL |
+| `POST` | `/api/db/test` | Test koneksi ke database MySQL |
+| `GET` | `/api/intent-queries` | Ambil semua query per label intent |
+| `PUT` | `/api/intent-queries/<label>` | Simpan atau update query untuk label tertentu |
+| `DELETE` | `/api/intent-queries/<label>` | Hapus query untuk label tertentu |
 
 ---
 

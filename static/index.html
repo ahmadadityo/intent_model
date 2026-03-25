@@ -550,6 +550,9 @@
     <div class="nav-item" data-page="stats" onclick="showPage('stats')">
       <span class="icon">📊</span> Statistik
     </div>
+    <div class="nav-item" data-page="database" onclick="showPage('database')">
+      <span class="icon">🗄️</span> Database
+    </div>
   </nav>
 
   <!-- Model status -->
@@ -792,6 +795,66 @@
     </div>
   </div>
 
+  <!-- ════════════ PAGE: DATABASE ════════════ -->
+  <div id="page-database" class="page">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Koneksi <span>Database</span></div>
+        <div class="page-sub">Konfigurasi MySQL dan mapping query per label intent</div>
+      </div>
+    </div>
+
+    <!-- DB Config Card -->
+    <div class="card" style="max-width:600px; margin-bottom:24px;">
+      <div style="font-size:14px; font-weight:700; margin-bottom:16px; color:var(--text);">⚙️ Konfigurasi Koneksi MySQL</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+        <div>
+          <label>Host</label>
+          <input type="text" id="db-host" placeholder="localhost" />
+        </div>
+        <div>
+          <label>Port</label>
+          <input type="number" id="db-port" placeholder="3306" value="3306" />
+        </div>
+        <div>
+          <label>Username</label>
+          <input type="text" id="db-username" placeholder="root" />
+        </div>
+        <div>
+          <label>Password</label>
+          <input type="password" id="db-password" placeholder="••••••••" />
+        </div>
+        <div style="grid-column:1/-1;">
+          <label>Nama Database</label>
+          <input type="text" id="db-database" placeholder="nama_database" />
+        </div>
+      </div>
+      <div id="db-test-result" style="display:none; border-radius:8px; padding:10px 14px; font-size:13px; margin-bottom:14px;"></div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-ghost" onclick="testDbConnection()">🔌 Test Koneksi</button>
+        <button class="btn btn-primary" onclick="saveDbConfig()">💾 Simpan Konfigurasi</button>
+      </div>
+    </div>
+
+    <!-- Intent Query Card -->
+    <div class="card">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+        <div style="font-size:14px; font-weight:700; color:var(--text);">📝 Query per Label Intent</div>
+        <span id="iq-count-info" style="font-size:12px; color:var(--muted);"></span>
+      </div>
+      <div style="font-size:12px; color:var(--muted); margin-bottom:16px; line-height:1.7;">
+        Tulis query SQL yang akan dieksekusi saat intent terdeteksi. Kosongkan jika label tidak butuh query.
+        Gunakan <code style="background:var(--surface); padding:1px 6px; border-radius:4px; color:var(--accent);">?</code> sebagai placeholder parameter.
+      </div>
+      <div class="toolbar" style="margin-bottom:16px;">
+        <input type="text" id="iq-search" placeholder="🔍 Cari label..." oninput="filterIntentQueries()" style="max-width:300px;" />
+      </div>
+      <div id="intent-queries-container">
+        <div class="empty-state"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <!-- ══ Modal: Add / Edit Dataset ══ -->
@@ -914,6 +977,7 @@
     if (name === 'labels')  { pendingRenames = {}; loadLabelsPage(); }
     if (name === 'train')   loadModelStatus();
     if (name === 'stats')   loadStats();
+    if (name === 'database') loadDbPage();
   }
 
   // ══ Toast ════════════════════════════════════════════════════════
@@ -1531,6 +1595,143 @@
         </div>
       </div>
     `).join('');
+  }
+
+  // ══ Database Config ═══════════════════════════════════════════════
+  let intentQueriesData = [];
+
+  async function loadDbPage() {
+    // Load existing config (password di-mask oleh server)
+    try {
+      const res  = await fetch(`${API}/api/db/config`);
+      const json = await res.json();
+      if (json.host)     document.getElementById('db-host').value     = json.host;
+      if (json.port)     document.getElementById('db-port').value     = json.port;
+      if (json.username) document.getElementById('db-username').value = json.username;
+      if (json.database) document.getElementById('db-database').value = json.database;
+      // password tidak di-restore ke input (mask)
+    } catch(e) { /* belum ada config, biarkan kosong */ }
+    loadIntentQueries();
+  }
+
+  async function saveDbConfig() {
+    const config = {
+      host:     document.getElementById('db-host').value.trim(),
+      port:     document.getElementById('db-port').value.trim(),
+      username: document.getElementById('db-username').value.trim(),
+      password: document.getElementById('db-password').value,
+      database: document.getElementById('db-database').value.trim()
+    };
+    if (!config.host || !config.username || !config.database) {
+      toast('Host, username, dan nama database wajib diisi', 'error'); return;
+    }
+    const res  = await fetch(`${API}/api/db/config`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(config)
+    });
+    const json = await res.json();
+    if (res.ok) toast(json.message, 'success');
+    else        toast(json.error, 'error');
+  }
+
+  async function testDbConnection() {
+    const config = {
+      host:     document.getElementById('db-host').value.trim(),
+      port:     document.getElementById('db-port').value.trim(),
+      username: document.getElementById('db-username').value.trim(),
+      password: document.getElementById('db-password').value,
+      database: document.getElementById('db-database').value.trim()
+    };
+    const resultEl = document.getElementById('db-test-result');
+    resultEl.style.display = 'block';
+    resultEl.style.background = 'rgba(108,99,255,0.06)';
+    resultEl.style.border     = '1px solid rgba(108,99,255,0.2)';
+    resultEl.style.color      = 'var(--muted)';
+    resultEl.textContent      = '⏳ Menguji koneksi...';
+
+    const res  = await fetch(`${API}/api/db/test`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(config)
+    });
+    const json = await res.json();
+    if (json.success) {
+      resultEl.style.background = 'rgba(67,233,123,0.08)';
+      resultEl.style.border     = '1px solid rgba(67,233,123,0.25)';
+      resultEl.style.color      = 'var(--accent3)';
+      resultEl.textContent      = `✅ ${json.message}`;
+    } else {
+      resultEl.style.background = 'rgba(255,107,107,0.08)';
+      resultEl.style.border     = '1px solid rgba(255,107,107,0.25)';
+      resultEl.style.color      = 'var(--accent2)';
+      resultEl.textContent      = `❌ ${json.error}`;
+    }
+  }
+
+  // ══ Intent Queries ════════════════════════════════════════════════
+  async function loadIntentQueries() {
+    document.getElementById('intent-queries-container').innerHTML =
+      '<div class="empty-state"><div class="spinner"></div></div>';
+    const res         = await fetch(`${API}/api/intent-queries`);
+    intentQueriesData = await res.json();
+    const withQuery   = intentQueriesData.filter(i => i.query).length;
+    document.getElementById('iq-count-info').textContent =
+      `${withQuery} dari ${intentQueriesData.length} label memiliki query`;
+    renderIntentQueries();
+  }
+
+  function filterIntentQueries() { renderIntentQueries(); }
+
+  function renderIntentQueries() {
+    const q        = (document.getElementById('iq-search')?.value || '').toLowerCase();
+    const filtered = intentQueriesData.filter(i => i.label.toLowerCase().includes(q));
+    if (!filtered.length) {
+      document.getElementById('intent-queries-container').innerHTML =
+        '<div class="empty-state"><div class="icon">🔍</div><h3>Label tidak ditemukan</h3></div>';
+      return;
+    }
+    const html = filtered.map(item => `
+      <div style="display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid var(--border);" id="iq-row-${CSS.escape(item.label)}">
+        <div style="flex:0 0 220px;">
+          <span class="label-badge" style="display:inline-block; margin-bottom:4px;">${escHtml(item.label)}</span>
+          ${item.orphan ? '<div style="font-size:10px; color:var(--accent2); margin-top:2px;">⚠️ Label tidak ada di dataset</div>' : ''}
+          ${item.query  ? '<div style="font-size:10px; color:var(--accent3); margin-top:2px;">✅ Ada query</div>'
+                        : '<div style="font-size:10px; color:var(--muted); margin-top:2px;">— Belum ada query</div>'}
+        </div>
+        <div style="flex:1;">
+          <textarea
+            id="iq-textarea-${escHtml(item.label)}"
+            rows="2"
+            placeholder="Contoh: SELECT * FROM wisata WHERE kategori = ?"
+            style="font-family:'Space Mono',monospace; font-size:12px; resize:vertical;"
+          >${escHtml(item.query)}</textarea>
+        </div>
+        <div style="flex:0 0 auto; display:flex; flex-direction:column; gap:6px;">
+          <button class="btn btn-success btn-sm" onclick="saveIntentQuery('${escHtml(item.label)}')">💾</button>
+          ${item.query ? `<button class="btn btn-danger btn-sm" onclick="deleteIntentQuery('${escHtml(item.label)}')">🗑️</button>` : ''}
+        </div>
+      </div>
+    `).join('');
+    document.getElementById('intent-queries-container').innerHTML =
+      `<div style="padding:0 4px;">${html}</div>`;
+  }
+
+  async function saveIntentQuery(label) {
+    const textarea = document.getElementById(`iq-textarea-${label}`);
+    const query    = textarea ? textarea.value.trim() : '';
+    const res  = await fetch(`${API}/api/intent-queries/${encodeURIComponent(label)}`, {
+      method: 'PUT', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ query })
+    });
+    const json = await res.json();
+    if (res.ok) { toast(json.message, 'success'); loadIntentQueries(); }
+    else          toast(json.error, 'error');
+  }
+
+  async function deleteIntentQuery(label) {
+    const res  = await fetch(`${API}/api/intent-queries/${encodeURIComponent(label)}`, { method: 'DELETE' });
+    const json = await res.json();
+    if (res.ok) { toast(json.message, 'success'); loadIntentQueries(); }
+    else          toast(json.error, 'error');
   }
 
   // ══ Init ══════════════════════════════════════════════════════════
