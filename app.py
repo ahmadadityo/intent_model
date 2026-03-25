@@ -404,16 +404,32 @@ def save_intent_query(label):
     body  = request.json
     query = body.get("query", "").strip()
     queries = load_intent_queries()
+
     if query:
+        # ── Validasi: hanya izinkan perintah SELECT ──────────────
+        DANGEROUS_KEYWORDS = [
+            "drop", "delete", "truncate", "alter",
+            "insert", "update", "create", "grant", "revoke"
+        ]
+        query_lower = query.lower()
+        if not query_lower.lstrip().startswith("select"):
+            return jsonify({"error": "Hanya perintah SELECT yang diizinkan"}), 400
+        if any(kw in query_lower for kw in DANGEROUS_KEYWORDS):
+            return jsonify({"error": "Query mengandung perintah berbahaya yang tidak diizinkan"}), 400
+        # ─────────────────────────────────────────────────────────
+
         queries[label] = query
     else:
         queries.pop(label, None)   # hapus jika query dikosongkan
+
     save_intent_queries(queries)
     return jsonify({
         "message": f"Query untuk label '{label}' berhasil disimpan",
         "label":   label,
         "query":   query
     })
+
+MAX_QUERY_ROWS = 500   # tambahkan di bagian konstanta atas file, dekat DATASET_PATH dll.
 
 @app.route("/api/intent-queries/<path:label>/execute", methods=["POST"])
 def execute_intent_query(label):
@@ -432,8 +448,17 @@ def execute_intent_query(label):
         return jsonify({"success": False, "error": "Konfigurasi database belum disimpan."}), 400
 
     # Ambil params opsional dari body (untuk placeholder ?)
-    body   = request.json or {}
-    params = body.get("params", [])
+    body       = request.json or {}
+    raw_params = body.get("params", [])
+
+    # ── Validasi params: harus list of scalar values ─────────────
+    if not isinstance(raw_params, list):
+        return jsonify({"success": False, "error": "params harus berupa array"}), 400
+    ALLOWED_TYPES = (str, int, float, type(None))
+    if not all(isinstance(p, ALLOWED_TYPES) for p in raw_params):
+        return jsonify({"success": False, "error": "Setiap elemen params harus berupa string, angka, atau null"}), 400
+    params = raw_params
+    # ─────────────────────────────────────────────────────────────
 
     try:
         conn = mysql.connector.connect(
@@ -446,17 +471,23 @@ def execute_intent_query(label):
         )
         cursor = conn.cursor(dictionary=True)
         cursor.execute(query, params)
-        rows    = cursor.fetchall()
+
+        # ── Batasi jumlah baris yang dikembalikan ─────────────────
+        rows      = cursor.fetchmany(MAX_QUERY_ROWS)
+        truncated = len(rows) == MAX_QUERY_ROWS
+        # ─────────────────────────────────────────────────────────
+
         columns = [desc[0] for desc in cursor.description] if cursor.description else []
         cursor.close()
         conn.close()
         return jsonify({
-            "success": True,
-            "label":   label,
-            "query":   query,
-            "columns": columns,
-            "rows":    rows,
-            "total":   len(rows)
+            "success":   True,
+            "label":     label,
+            "query":     query,
+            "columns":   columns,
+            "rows":      rows,
+            "total":     len(rows),
+            "truncated": truncated          # beri tahu frontend jika data dipotong
         })
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 200
