@@ -388,21 +388,34 @@ def get_intent_queries():
     labels  = sorted(set(d["label"] for d in data))
     result  = []
     for label in labels:
+        entry = queries.get(label, {})
         result.append({
-            "label": label,
-            "query": queries.get(label, "")
+            "label":          label,
+            "query":          entry.get("query", "") if isinstance(entry, dict) else entry,
+            "system_message": entry.get("system_message", "") if isinstance(entry, dict) else ""
         })
-    # Tambahkan entry dari intent_query.json yang labelnya sudah tidak ada di dataset
-    for label, query in queries.items():
+    for label, entry in queries.items():
         if label not in set(labels):
-            result.append({"label": label, "query": query, "orphan": True})
+            result.append({
+                "label":          label,
+                "query":          entry.get("query", "") if isinstance(entry, dict) else entry,
+                "system_message": entry.get("system_message", "") if isinstance(entry, dict) else "",
+                "orphan":         True
+            })
     return jsonify(result)
 
 
 @app.route("/api/intent-queries/<path:label>", methods=["PUT"])
 def save_intent_query(label):
-    body  = request.json
-    query = body.get("query", "").strip()
+    body           = request.json
+    query          = body.get("query", "").strip()
+    system_message = body.get("system_message", "").strip()
+
+    # Batasi panjang system_message
+    MAX_SYSTEM_MSG_LEN = 2000
+    if len(system_message) > MAX_SYSTEM_MSG_LEN:
+        return jsonify({"error": f"system_message maksimal {MAX_SYSTEM_MSG_LEN} karakter"}), 400
+
     queries = load_intent_queries()
 
     if query:
@@ -418,15 +431,27 @@ def save_intent_query(label):
             return jsonify({"error": "Query mengandung perintah berbahaya yang tidak diizinkan"}), 400
         # ─────────────────────────────────────────────────────────
 
-        queries[label] = query
+        queries[label] = {
+            "query":          query,
+            "system_message": system_message
+        }
     else:
-        queries.pop(label, None)   # hapus jika query dikosongkan
+        # Jika query dikosongkan tapi system_message ada, tetap simpan entry-nya
+        if system_message:
+            existing = queries.get(label, {})
+            queries[label] = {
+                "query":          "",
+                "system_message": system_message
+            }
+        else:
+            queries.pop(label, None)
 
     save_intent_queries(queries)
     return jsonify({
-        "message": f"Query untuk label '{label}' berhasil disimpan",
-        "label":   label,
-        "query":   query
+        "message":        f"Query untuk label '{label}' berhasil disimpan",
+        "label":          label,
+        "query":          query,
+        "system_message": system_message
     })
 
 MAX_QUERY_ROWS = 500   # tambahkan di bagian konstanta atas file, dekat DATASET_PATH dll.
@@ -438,7 +463,8 @@ def execute_intent_query(label):
         return jsonify({"success": False, "error": "Library mysql-connector-python belum terinstal."}), 400
 
     queries = load_intent_queries()
-    query   = queries.get(label, "").strip()
+    entry   = queries.get(label, {})
+    query   = (entry.get("query", "") if isinstance(entry, dict) else entry).strip()
 
     if not query:
         return jsonify({"success": False, "error": f"Tidak ada query untuk label '{label}'"}), 404
@@ -528,7 +554,18 @@ def load_intent_queries():
     if not os.path.exists(INTENT_QUERY_PATH):
         return {}
     with open(INTENT_QUERY_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+        raw = json.load(f)
+    # Migrasi format lama: { label: "query" } → { label: { query, system_message } }
+    migrated = {}
+    for label, value in raw.items():
+        if isinstance(value, str):
+            migrated[label] = {"query": value, "system_message": ""}
+        else:
+            migrated[label] = {
+                "query":          value.get("query", ""),
+                "system_message": value.get("system_message", "")
+            }
+    return migrated
 
 
 def save_intent_queries(queries):

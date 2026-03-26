@@ -1765,13 +1765,21 @@
           ${item.query  ? '<div style="font-size:10px; color:var(--accent3); margin-top:2px;">✅ Ada query</div>'
                         : '<div style="font-size:10px; color:var(--muted); margin-top:2px;">— Belum ada query</div>'}
         </div>
-        <div style="flex:1;">
+        <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+          <label style="margin-bottom:2px;">SQL Query</label>
           <textarea
             id="iq-textarea-${escHtml(item.label)}"
             rows="2"
-            placeholder="Contoh: SELECT * FROM wisata WHERE kategori = ?"
+            placeholder="Contoh: SELECT * FROM ..."
             style="font-family:'Space Mono',monospace; font-size:12px; resize:vertical;"
           >${escHtml(item.query)}</textarea>
+          <label style="margin-bottom:2px; margin-top:4px;">System Message</label>
+          <textarea
+            id="iq-sysmsg-${escHtml(item.label)}"
+            rows="3"
+            placeholder="Contoh: Kamu adalah asisten ..."
+            style="font-size:12px; resize:vertical;"
+          >${escHtml(item.system_message || '')}</textarea>
         </div>
         <div style="flex:0 0 auto; display:flex; flex-direction:column; gap:6px;">
           <button class="btn btn-success btn-sm" onclick="saveIntentQuery('${escHtml(item.label)}')">💾</button>
@@ -1786,10 +1794,12 @@
 
   async function saveIntentQuery(label) {
     const textarea = document.getElementById(`iq-textarea-${label}`);
-    const query    = textarea ? textarea.value.trim() : '';
+    const sysmsg   = document.getElementById(`iq-sysmsg-${label}`);
+    const query          = textarea ? textarea.value.trim() : '';
+    const system_message = sysmsg   ? sysmsg.value.trim()   : '';
     const res  = await fetch(`${API}/api/intent-queries/${encodeURIComponent(label)}`, {
       method: 'PUT', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ query })
+      body: JSON.stringify({ query, system_message })
     });
     const json = await res.json();
     if (res.ok) { toast(json.message, 'success'); loadIntentQueries(); }
